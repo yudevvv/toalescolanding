@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1261 815" fill="none">
+  <rect width="1261" height="815" fill="#0f172a"/>
+  <!-- Top navbar -->
+  <rect x="0" y="0" width="1261" height="60" fill="#1e293b"/>
+  <rect x="0" y="60" width="1261" height="1" fill="#334155"/>
+  <!-- Logo -->
+  <text x="30" y="38" font-family="monospace" font-size="14" font-weight="bold" fill="#0ea5e9">JUGAVIEWSCL</text>
+  <text x="170" y="38" font-family="monospace" font-size="9" fill="#64748b">marketplace de talento</text>
+  <!-- Nav links -->
+  <text x="430" y="38" font-family="monospace" font-size="11" fill="#0ea5e9">$ Jugadores</text>
+  <text x="550" y="38" font-family="monospace" font-size="11" fill="#94a3b8">$ Clubes</text>
+  <text x="660" y="38" font-family="monospace" font-size="11" fill="#94a3b8">$ Agencias</text>
+  <!-- Auth buttons -->
+  <rect x="1030" y="16" width="80" height="28" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="1045" y="35" font-family="monospace" font-size="10" fill="#94a3b8">Iniciar sesión</text>
+  <rect x="1120" y="16" width="110" height="28" rx="6" fill="#0ea5e9"/>
+  <text x="1135" y="35" font-family="monospace" font-size="10" font-weight="bold" fill="#0f172a">Crear perfil gratis</text>
+
+  <!-- Hero area -->
+  <rect x="0" y="61" width="1261" height="120" fill="#0f172a"/>
+  <text x="40" y="100" font-family="monospace" font-size="22" font-weight="bold" fill="#e2e8f0">Descubre talento chileno</text>
+  <text x="40" y="130" font-family="monospace" font-size="12" fill="#64748b">Busca jugadores por posición, edad, estadísticas y más. Conecta con el próximo talento de tu club.</text>
+
+  <!-- Search/filter bar -->
+  <rect x="40" y="150" width="1180" height="44" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <!-- Search field -->
+  <rect x="55" y="160" width="280" height="24" rx="4" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="68" y="177" font-family="monospace" font-size="10" fill="#64748b">🔍 Buscar jugador...</text>
+  <!-- Filter chips -->
+  <rect x="350" y="160" width="100" height="24" rx="4" fill="#0ea5e9" fill-opacity="0.15" stroke="#0ea5e9" stroke-width="1"/>
+  <text x="365" y="177" font-family="monospace" font-size="9" fill="#0ea5e9">Posición ▼</text>
+  <rect x="460" y="160" width="90" height="24" rx="4" fill="#0ea5e9" fill-opacity="0.15" stroke="#0ea5e9" stroke-width="1"/>
+  <text x="475" y="177" font-family="monospace" font-size="9" fill="#0ea5e9">Edad ▼</text>
+  <rect x="560" y="160" width="100" height="24" rx="4" fill="#0ea5e9" fill-opacity="0.15" stroke="#0ea5e9" stroke-width="1"/>
+  <text x="575" y="177" font-family="monospace" font-size="9" fill="#0ea5e9">Región ▼</text>
+  <rect x="670" y="160" width="110" height="24" rx="4" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1"/>
+  <text x="685" y="177" font-family="monospace" font-size="9" fill="#10b981">Pie hábil ▼</text>
+  <!-- Results count -->
+  <text x="1100" y="177" font-family="monospace" font-size="10" fill="#64748b">1,247 jugadores</text>
+
+  <!-- Player cards grid -->
+  <!-- Player 1 -->
+  <rect x="40" y="210" width="280" height="280" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <circle cx="180" cy="260" r="35" fill="#0ea5e9" fill-opacity="0.15"/>
+  <text x="175" y="266" font-family="monospace" font-size="18" font-weight="bold" fill="#0ea5e9">ML</text>
+  <text x="100" y="310" font-family="monospace" font-size="13" font-weight="bold" fill="#e2e8f0">Matías López</text>
+  <text x="125" y="330" font-family="monospace" font-size="10" fill="#10b981">Delantero · 22 años</text>
+  <text x="60" y="355" font-family="monospace" font-size="9" fill="#64748b">⚽ 1.82m · Derecho · 18 goles en 2025</text>
+  <text x="60" y="375" font-family="monospace" font-size="9" fill="#64748b">📍 Los Ríos · CD Valdivia</text>
+  <rect x="60" y="395" width="100" height="22" rx="4" fill="#0ea5e9" fill-opacity="0.1"/>
+  <text x="72" y="411" font-family="monospace" font-size="8" fill="#0ea5e9">Delantero centro</text>
+  <rect x="170" y="395" width="80" height="22" rx="4" fill="#10b981" fill-opacity="0.1"/>
+  <text x="180" y="411" font-family="monospace" font-size="8" fill="#10b981">Disponible</text>
+  <rect x="60" y="425" width="240" height="26" rx="5" fill="#0ea5e9"/>
+  <text x="130" y="443" font-family="monospace" font-size="9" font-weight="bold" fill="#0f172a">Contactar</text>
+
+  <!-- Player 2 -->
+  <rect x="340" y="210" width="280" height="280" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <circle cx="480" cy="260" r="35" fill="#10b981" fill-opacity="0.15"/>
+  <text x="473" y="266" font-family="monospace" font-size="18" font-weight="bold" fill="#10b981">FP</text>
+  <text x="392" y="310" font-family="monospace" font-size="13" font-weight="bold" fill="#e2e8f0">Francisco Pavez</text>
+  <text x="418" y="330" font-family="monospace" font-size="10" fill="#0ea5e9">Mediocampista · 24 años</text>
+  <text x="360" y="355" font-family="monospace" font-size="9" fill="#64748b">⚽ 1.76m · Zurdo · 12 asistencias en 2025</text>
+  <text x="360" y="375" font-family="monospace" font-size="9" fill="#64748b">📍 Metropolitana · CD Palestino</text>
+  <rect x="360" y="395" width="110" height="22" rx="4" fill="#0ea5e9" fill-opacity="0.1"/>
+  <text x="372" y="411" font-family="monospace" font-size="8" fill="#0ea5e9">Mediocampo ofensivo</text>
+  <rect x="480" y="395" width="80" height="22" rx="4" fill="#10b981" fill-opacity="0.1"/>
+  <text x="490" y="411" font-family="monospace" font-size="8" fill="#10b981">Disponible</text>
+  <rect x="360" y="425" width="240" height="26" rx="5" fill="#0ea5e9"/>
+  <text x="430" y="443" font-family="monospace" font-size="9" font-weight="bold" fill="#0f172a">Contactar</text>
+
+  <!-- Player 3 -->
+  <rect x="640" y="210" width="280" height="280" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <circle cx="780" cy="260" r="35" fill="#f59e0b" fill-opacity="0.15"/>
+  <text x="773" y="266" font-family="monospace" font-size="18" font-weight="bold" fill="#f59e0b">CR</text>
+  <text x="692" y="310" font-family="monospace" font-size="13" font-weight="bold" fill="#e2e8f0">Cristóbal Rivas</text>
+  <text x="718" y="330" font-family="monospace" font-size="10" fill="#10b981">Defensa central · 20 años</text>
+  <text x="660" y="355" font-family="monospace" font-size="9" fill="#64748b">⚽ 1.88m · Derecho · 85% duels ganados</text>
+  <text x="660" y="375" font-family="monospace" font-size="9" fill="#64748b">📍 Biobío · CD Concepción</text>
+  <rect x="660" y="395" width="100" height="22" rx="4" fill="#0ea5e9" fill-opacity="0.1"/>
+  <text x="672" y="411" font-family="monospace" font-size="8" fill="#0ea5e9">Defensa central</text>
+  <rect x="770" y="395" width="80" height="22" rx="4" fill="#f59e0b" fill-opacity="0.1"/>
+  <text x="778" y="411" font-family="monospace" font-size="8" fill="#f59e0b">En negociación</text>
+  <rect x="660" y="425" width="240" height="26" rx="5" fill="#0ea5e9"/>
+  <text x="730" y="443" font-family="monospace" font-size="9" font-weight="bold" fill="#0f172a">Contactar</text>
+
+  <!-- Player 4 -->
+  <rect x="940" y="210" width="280" height="280" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <circle cx="1080" cy="260" r="35" fill="#06b6d4" fill-opacity="0.15"/>
+  <text x="1073" y="266" font-family="monospace" font-size="18" font-weight="bold" fill="#06b6d4">SM</text>
+  <text x="1000" y="310" font-family="monospace" font-size="13" font-weight="bold" fill="#e2e8f0">Sebastián Muñoz</text>
+  <text x="1020" y="330" font-family="monospace" font-size="10" fill="#0ea5e9">Portero · 26 años</text>
+  <text x="960" y="355" font-family="monospace" font-size="9" fill="#64748b">⚽ 1.92m · Derecho · 14 vallas invictas</text>
+  <text x="960" y="375" font-family="monospace" font-size="9" fill="#64748b">📍 Araucanía · CD Temuco</text>
+  <rect x="960" y="395" width="70" height="22" rx="4" fill="#0ea5e9" fill-opacity="0.1"/>
+  <text x="975" y="411" font-family="monospace" font-size="8" fill="#0ea5e9">Portero</text>
+  <rect x="1040" y="395" width="80" height="22" rx="4" fill="#10b981" fill-opacity="0.1"/>
+  <text x="1050" y="411" font-family="monospace" font-size="8" fill="#10b981">Disponible</text>
+  <rect x="960" y="425" width="240" height="26" rx="5" fill="#0ea5e9"/>
+  <text x="1030" y="443" font-family="monospace" font-size="9" font-weight="bold" fill="#0f172a">Contactar</text>
+
+  <!-- Pagination -->
+  <rect x="40" y="510" width="1180" height="40" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="580" y="535" font-family="monospace" font-size="10" fill="#0ea5e9">‹ 1 2 3 4 5 ... 32 ›</text>
+  <text x="1100" y="535" font-family="monospace" font-size="9" fill="#64748b">página 1 de 32</text>
+
+  <!-- Bottom stats bar -->
+  <rect x="0" y="570" width="1261" height="245" fill="#0f172a"/>
+  <rect x="0" y="570" width="1261" height="1" fill="#334155"/>
+
+  <text x="40" y="600" font-family="monospace" font-size="11" font-weight="bold" fill="#e2e8f0">📊 Estadísticas de la plataforma</text>
+
+  <rect x="40" y="620" width="280" height="80" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="60" y="645" font-family="monospace" font-size="10" fill="#64748b">Jugadores registrados</text>
+  <text x="60" y="680" font-family="monospace" font-size="24" font-weight="bold" fill="#0ea5e9">1,247</text>
+
+  <rect x="340" y="620" width="280" height="80" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="360" y="645" font-family="monospace" font-size="10" fill="#64748b">Clubes activos</text>
+  <text x="360" y="680" font-family="monospace" font-size="24" font-weight="bold" fill="#10b981">86</text>
+
+  <rect x="640" y="620" width="280" height="80" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="660" y="645" font-family="monospace" font-size="10" fill="#64748b">Agencias asociadas</text>
+  <text x="660" y="680" font-family="monospace" font-size="24" font-weight="bold" fill="#f59e0b">24</text>
+
+  <rect x="940" y="620" width="280" height="80" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="960" y="645" font-family="monospace" font-size="10" fill="#64748b">Conexiones realizadas</text>
+  <text x="960" y="680" font-family="monospace" font-size="24" font-weight="bold" fill="#06b6d4">3,892</text>
+
+  <text x="40" y="740" font-family="monospace" font-size="9" fill="#64748b">⚡ En desarrollo — Módulo de contacto y videos próximamente</text>
+  <text x="40" y="760" font-family="monospace" font-size="9" fill="#64748b">🔗 https://jugaviewscl.toalesco.cl</text>
+  <text x="1060" y="760" font-family="monospace" font-size="9" fill="#64748b">v0.1.0 · build #012</text>
+</svg>
