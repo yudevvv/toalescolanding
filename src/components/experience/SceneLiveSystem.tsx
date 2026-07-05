@@ -21,22 +21,21 @@ function Ecosystem() {
           <g key={i}>
             <line x1={`${nodes[a].x}%`} y1={`${nodes[a].y}%`} x2={`${nodes[b].x}%`} y2={`${nodes[b].y}%`}
               stroke="var(--pb-solution)" strokeWidth="0.5" opacity="0.3" />
-            <motion.line x1={`${nodes[a].x}%`} y1={`${nodes[a].y}%`} x2={`${nodes[b].x}%`} y2={`${nodes[b].y}%`}
+            <line x1={`${nodes[a].x}%`} y1={`${nodes[a].y}%`} x2={`${nodes[b].x}%`} y2={`${nodes[b].y}%`}
               stroke="var(--pb-energy)" strokeWidth="1" strokeDasharray="3 10" opacity="0.25"
-              animate={{ strokeDashoffset: [0, -26] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "linear", delay: i * 0.12 }} />
+              className="a-dash-slow"
+              style={{ animationDelay: `${i * 0.12}s` }} />
           </g>
         ))}
         {nodes.map((n, i) => (
-          <motion.circle key={i} cx={`${n.x}%`} cy={`${n.y}%`} r="2.5" fill="var(--pb-solution)" opacity="0.2"
-            animate={{ opacity: [0.1, 0.35, 0.1] }}
-            transition={{ duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut" }} />
+          <circle key={i} cx={`${n.x}%`} cy={`${n.y}%`} r="2.5" fill="var(--pb-solution)" opacity="0.2"
+            className="a-pulse-node"
+            style={{ animationDuration: `${3 + i * 0.3}s` }} />
         ))}
       </svg>
       {[0,1,2,3,4].map((i) => (
-        <motion.div key={i} className="absolute rounded-full" style={{ width: 2, height: 2, background: "var(--pb-energy)", left: `${15 + i * 16}%` }}
-          animate={{ top: [`${20 + i * 8}%`, `${15 + i * 8}%`, `${20 + i * 8}%`], opacity: [0.1, 0.5, 0.1] }}
-          transition={{ duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: i * 0.6 }} />
+        <div key={i} className="absolute rounded-full a-float-py"
+          style={{ width: 2, height: 2, background: "var(--pb-energy)", left: `${15 + i * 16}%`, animationDuration: `${5 + i}s`, animationDelay: `${i * 0.6}s` }} />
       ))}
     </div>
   );
@@ -64,12 +63,10 @@ function PanelLanding() {
             </div>
           ))}
         </div>
-        <motion.div className="h-7 rounded-md flex items-center justify-center text-xs font-medium"
-          style={{ background: "var(--pb-energy)", color: "#fff" }}
-          animate={{ opacity: [1, 0.7, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}>
+        <div className="h-7 rounded-md flex items-center justify-center text-xs font-medium a-pulse"
+          style={{ background: "var(--pb-energy)", color: "#fff" }}>
           Enviar → Enviado ✓
-        </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -96,19 +93,16 @@ function PanelExcel() {
         ].map((row, i) => (
           <div key={i} className="flex gap-1 py-1 text-[10px] border-b" style={{ borderColor: "var(--boundary)" }}>
             <span className="flex-1 font-medium" style={{ color: "var(--pb-text)" }}>{row.name}</span>
-            <motion.span className="flex-1 font-mono tabular-nums" style={{ color: row.stock < 5 ? "#EF4444" : "var(--pb-text)" }}
-              animate={row.stock < 5 ? { opacity: [1, 0.4, 1] } : {}}
-              transition={{ duration: 1.5, repeat: Infinity }}>
+            <span className={`flex-1 font-mono tabular-nums${row.stock < 5 ? " a-pulse" : ""}`} style={{ color: row.stock < 5 ? "#EF4444" : "var(--pb-text)" }}>
               {row.stock}
-            </motion.span>
+            </span>
             <span className="flex-1 font-mono" style={{ color: "var(--pb-text)" }}>{row.price}</span>
             <span className="flex-1 font-mono" style={{ color: "var(--pb-text)" }}>{row.total}</span>
           </div>
         ))}
-        <motion.div className="mt-2 text-[9px] font-mono" style={{ color: "#6366F1" }}
-          animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+        <div className="mt-2 text-[9px] font-mono a-pulse" style={{ color: "#6366F1" }}>
           &gt; alerta_stock_bajo("Camisetas") → Pedido automático generado ✓
-        </motion.div>
+        </div>
       </div>
     </div>
   );
@@ -132,7 +126,7 @@ function PanelPython() {
   ];
 
   useEffect(() => {
-    const interval = setInterval(() => setStep((s) => (s + 1) % lines.length), 350);
+    const interval = setInterval(() => setStep((s) => (s + 1) % lines.length), 500);
     return () => clearInterval(interval);
   }, [lines.length]);
 
@@ -154,10 +148,7 @@ function PanelPython() {
             {line.text || "\u00A0"}
           </motion.div>
         ))}
-        <motion.span style={{ color: "#22C55E" }}
-          animate={{ opacity: [1, 0] }} transition={{ duration: 0.5, repeat: Infinity }}>
-          ▊
-        </motion.span>
+        <span style={{ color: "#22C55E" }} className="a-blink">▊</span>
       </div>
     </div>
   );
@@ -169,9 +160,9 @@ function PanelDashboard() {
       style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)" }}>
       <div className="flex items-center gap-2 px-3 py-1.5 border-b text-[9px] font-semibold tracking-wider" style={{ borderColor: "var(--boundary)", color: "var(--measure-dim)" }}>
         <span style={{ color: "var(--pb-solution)" }}>◉</span> Dashboard · TOALESCO
-        <motion.span className="ml-auto" style={{ color: "#22C55E" }} animate={{ opacity: [1, 0.4, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+        <span className="ml-auto a-pulse" style={{ color: "#22C55E" }}>
           ● En vivo
-        </motion.span>
+        </span>
       </div>
       <div className="p-3">
         <div className="grid grid-cols-3 gap-2 mb-3">
@@ -182,10 +173,9 @@ function PanelDashboard() {
           ].map((k) => (
             <div key={k.label} className="text-center">
               <div className="text-[8px]" style={{ color: "var(--measure-dim)" }}>{k.label}</div>
-              <motion.div className="text-sm font-bold tabular-nums mt-0.5" style={{ color: k.color }}
-                animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 3, repeat: Infinity }}>
+              <div className="text-sm font-bold tabular-nums mt-0.5 a-scale-pulse" style={{ color: k.color }}>
                 {k.value}
-              </motion.div>
+              </div>
               <div className="text-[8px]" style={{ color: "#22C55E" }}>{k.change}</div>
             </div>
           ))}
@@ -288,21 +278,20 @@ function PanelInventory() {
       style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)" }}>
       <div className="flex items-center gap-2 px-3 py-1.5 border-b text-[9px]" style={{ borderColor: "var(--boundary)", color: "var(--measure-dim)" }}>
         <span style={{ color: "var(--pb-solution)", fontWeight: 600 }}>Inventario</span>
-        <motion.span className="ml-auto text-[8px]" style={{ color: "#22C55E" }} animate={{ opacity: [1, 0.4, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+        <span className="ml-auto text-[8px] a-pulse" style={{ color: "#22C55E" }}>
           ● Sincronizado
-        </motion.span>
+        </span>
       </div>
       <div className="p-3">
         {Object.entries(stock).map(([product, qty]) => (
           <div key={product} className="flex items-center gap-2 py-1 text-xs border-b" style={{ borderColor: "var(--boundary)" }}>
             <span className="flex-1 font-medium" style={{ color: "var(--pb-text)" }}>{product}</span>
-            <motion.span className="font-mono tabular-nums w-6 text-right" style={{ color: qty < 5 ? "#EF4444" : "var(--pb-text)" }}
-              key={qty} initial={{ scale: 1.2 }} animate={{ scale: 1 }} transition={{ duration: 0.15 }}>
+            <span className="font-mono tabular-nums w-6 text-right" style={{ color: qty < 5 ? "#EF4444" : "var(--pb-text)" }}>
               {qty}
-            </motion.span>
+            </span>
             <div className="w-14 h-1.5 rounded-full overflow-hidden" style={{ background: "var(--boundary)" }}>
-              <motion.div className="h-full rounded-full" style={{ background: qty < 5 ? "#EF4444" : "var(--pb-solution)" }}
-                animate={{ width: `${Math.min(100, (qty / 60) * 100)}%` }} transition={{ duration: 0.4 }} />
+              <div className="h-full rounded-full transition-all duration-300"
+                style={{ background: qty < 5 ? "#EF4444" : "var(--pb-solution)", width: `${Math.min(100, (qty / 60) * 100)}%` }} />
             </div>
           </div>
         ))}

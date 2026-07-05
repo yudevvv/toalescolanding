@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ─── DATA ───
@@ -66,17 +66,12 @@ const problems: Problem[] = [
 function IconInstagram() {
   return (
     <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8 lg:w-10 lg:h-10">
-      <motion.rect x="12" y="6" width="16" height="28" rx="3" stroke="currentColor" strokeWidth="1.5"
-        animate={{ x: [0, -0.6, 0.6, 0] }}
-        transition={{ duration: 0.4, repeat: Infinity, repeatDelay: 2.5, ease: "easeInOut" }}
-      />
+      <rect x="12" y="6" width="16" height="28" rx="3" stroke="currentColor" strokeWidth="1.5" className="a-shake" />
       <rect x="14.5" y="10.5" width="11" height="15" rx="1" fill="currentColor" opacity="0.08" />
       {[0, 1, 2].map((i) => (
-        <motion.circle key={i} cx={20 + (i - 1) * 5} cy={29}
-          r="1.2" fill="currentColor"
-          animate={{ opacity: [0, 1, 0], y: [0, -5, -10] }}
-          transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.25, ease: "easeOut" }}
-        />
+        <circle key={i} cx={20 + (i - 1) * 5} cy={29}
+          r="1.2" fill="currentColor" className="a-float"
+          style={{ animationDelay: `${i * 0.25}s` }} />
       ))}
     </svg>
   );
@@ -88,21 +83,15 @@ function IconExcel() {
       {[0, 1, 2, 3].map((row) =>
         [0, 1, 2].map((col) => {
           const idx = row * 3 + col;
+          const isActive = (idx + row) % 2 === 0;
           return (
-            <motion.rect key={idx}
+            <rect key={idx}
               x={8 + col * 9} y={8 + row * 8}
               width="7" height="6" rx="1"
               stroke="currentColor" strokeWidth="0.8"
               fill="currentColor" fillOpacity="0.06"
-              animate={{
-                fillOpacity: [0.06, (idx + row) % 2 === 0 ? 0.25 : 0.06, 0.06],
-              }}
-              transition={{
-                duration: 1, repeat: Infinity, repeatDelay: 2.5,
-                delay: Math.random() * 0.4,
-                ease: "easeInOut",
-              }}
-            />
+              className={isActive ? "a-pulse-ce" : undefined}
+              style={{ animationDelay: `${(idx * 0.03).toFixed(2)}s` }} />
           );
         })
       )}
@@ -114,20 +103,13 @@ function IconInventory() {
   return (
     <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8 lg:w-10 lg:h-10">
       {[0, 1, 2].map((i) => (
-        <motion.rect key={i}
+        <rect key={i}
           x={10 + i * 7} y={12 + (i % 2) * 6}
           width="6" height="5" rx="1"
           stroke="currentColor" strokeWidth="1.2"
           fill="currentColor" fillOpacity="0.08"
-          animate={{
-            x: [10 + i * 7, 10 + ((i + 1) % 3) * 7, 10 + i * 7],
-          }}
-          transition={{
-            duration: 1.8, repeat: Infinity, repeatDelay: 2,
-            delay: i * 0.2,
-            ease: [0.34, 1.56, 0.64, 1],
-          }}
-        />
+          className="a-slide"
+          style={{ animationDelay: `${i * 0.2}s` }} />
       ))}
     </svg>
   );
@@ -136,34 +118,21 @@ function IconInventory() {
 function IconWhatsApp() {
   return (
     <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8 lg:w-10 lg:h-10">
-      <motion.g
-        animate={{ opacity: [1, 0.5, 1] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-      >
+      <g className="a-breathe">
         {[0, 1].map((i) => (
-          <motion.rect key={i}
+          <rect key={i}
             x={9 + i * 13} y={9 + i * 9}
             width="15" height="10" rx="4"
             stroke="currentColor" strokeWidth="1"
             fill="currentColor" fillOpacity="0.06"
-            animate={{
-              y: [9 + i * 9, 9 + i * 9 - 3, 9 + i * 9],
-            }}
-            transition={{
-              duration: 1.4, repeat: Infinity, repeatDelay: 1.8,
-              delay: i * 0.3,
-              ease: "easeInOut",
-            }}
-          />
+            className="a-bob"
+            style={{ animationDelay: `${i * 0.3}s` }} />
         ))}
-      </motion.g>
-      <motion.path
-        d="M18 27 Q20 31 25 29"
+      </g>
+      <path d="M18 27 Q20 31 25 29"
         stroke="currentColor" strokeWidth="1.2"
         fill="none" strokeLinecap="round"
-        animate={{ pathLength: [0, 1, 1, 0], opacity: [0, 1, 1, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-      />
+        className="a-draw" />
     </svg>
   );
 }
@@ -171,22 +140,16 @@ function IconWhatsApp() {
 function IconTasks() {
   return (
     <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8 lg:w-10 lg:h-10">
-      <motion.path
-        d="M20 10 A10 10 0 1 1 19.9 10"
+      <path d="M20 10 A10 10 0 1 1 19.9 10"
         stroke="currentColor" strokeWidth="1.5"
         strokeLinecap="round" fill="none"
-        animate={{ rotate: [0, 360], opacity: [1, 1, 0.3, 1] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-        style={{ originX: "20px", originY: "20px" }}
-      />
-      <motion.path
-        d="M14 20 L18 24 L26 16"
+        className="a-spin"
+        style={{ transformOrigin: "20px 20px" }} />
+      <path d="M14 20 L18 24 L26 16"
         stroke="currentColor" strokeWidth="2"
         strokeLinecap="round" strokeLinejoin="round"
         fill="none"
-        animate={{ pathLength: [0, 1], opacity: [0, 1] }}
-        transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2.5, ease: "easeOut" }}
-      />
+        className="a-draw-check" />
     </svg>
   );
 }
@@ -195,21 +158,13 @@ function IconReports() {
   return (
     <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8 lg:w-10 lg:h-10">
       {[0, 1, 2, 3].map((i) => (
-        <motion.rect key={i}
+        <rect key={i}
           x={7 + i * 8} y={20 - i * 3}
           width="5" height={8 + i * 4} rx="0.5"
           fill="currentColor" fillOpacity="0.12"
           stroke="currentColor" strokeWidth="0.6"
-          animate={{
-            height: [8 + i * 4, 8 + (3 - i) * 4, 8 + i * 4],
-            fillOpacity: [0.12, 0.3, 0.12],
-          }}
-          transition={{
-            duration: 1.5, repeat: Infinity, repeatDelay: 2.5,
-            delay: i * 0.12,
-            ease: "easeInOut",
-          }}
-        />
+          className="a-bar-pulse"
+          style={{ animationDelay: `${i * 0.12}s` }} />
       ))}
     </svg>
   );
@@ -388,22 +343,13 @@ function EnergyLines({ gridRef, activeIndex }: { gridRef: React.RefObject<HTMLDi
           <g key={i}>
             <path d={p.d} stroke="var(--boundary)" strokeWidth="1"
               fill="none" opacity="0.35" />
-            <motion.path
-              d={p.d}
+            <path d={p.d}
               stroke={isConnected ? "var(--pb-energy)" : "var(--pb-solution)"}
-              strokeWidth="1.5"
-              fill="none"
-              strokeLinecap="round"
+              strokeWidth="1.5" fill="none" strokeLinecap="round"
               strokeDasharray="4 14"
               opacity={isConnected ? 0.7 : 0.2}
-              animate={{
-                strokeDashoffset: [0, -36],
-              }}
-              transition={{
-                duration: 1.2, repeat: Infinity, ease: "linear",
-                delay: i * 0.15,
-              }}
-            />
+              className="a-dash"
+              style={{ animationDelay: `${i * 0.15}s` }} />
             <path d={p.d}
               stroke={isConnected ? "var(--pb-energy)" : "var(--pb-solution)"}
               strokeWidth="5" fill="none" opacity="0.06"

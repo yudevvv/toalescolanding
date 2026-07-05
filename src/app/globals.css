@@ -13,7 +13,7 @@
 :root {
   --substrate: #F8F9FB;
   --measure: #0F1419;
-  --measure-dim: rgba(15,20,25,0.45);
+  --measure-dim: rgba(15,20,25,0.55);
   --measure-secondary: #6B7280;
   --active: #FF6B2B;
   --active-dim: rgba(255,107,43,0.06);
@@ -29,7 +29,7 @@
 [data-theme="dark"] {
   --substrate: #07111F;
   --measure: #D6DAE2;
-  --measure-dim: rgba(214,218,226,0.45);
+  --measure-dim: rgba(214,218,226,0.55);
   --measure-secondary: #7A8294;
   --active-dim: rgba(255,107,43,0.12);
   --boundary: rgba(214,218,226,0.08);
@@ -52,3 +52,120 @@ html {
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ─── CSS Animations (replacing framer-motion for perf) ─── */
+
+/* Shake (Instagram icon) */
+@keyframes a-shake {
+  0%,86% { transform:translateX(0) }
+  91% { transform:translateX(-0.6px) }
+  97% { transform:translateX(0.6px) }
+  100% { transform:translateX(0) }
+}
+.a-shake { animation:a-shake 2.9s ease-in-out infinite }
+
+/* Float up (Instagram dots) */
+@keyframes a-float {
+  0% { opacity:0; transform:translateY(0) }
+  50% { opacity:1; transform:translateY(-5px) }
+  100% { opacity:0; transform:translateY(-10px) }
+}
+.a-float { animation:a-float 0.9s ease-out infinite }
+
+/* Pulse cell (Excel) */
+@keyframes a-pulse-ce {
+  0%,100% { opacity:0.06 }
+  50% { opacity:0.25 }
+}
+.a-pulse-ce { animation:a-pulse-ce 1s ease-in-out infinite }
+
+/* Slide box (Inventory) */
+@keyframes a-slide {
+  0%,100% { transform:translateX(0) }
+  50% { transform:translateX(7px) }
+}
+.a-slide { animation:a-slide 1.8s ease-in-out infinite }
+
+/* Breathe (WhatsApp group) */
+@keyframes a-breathe {
+  0%,100% { opacity:1 }
+  50% { opacity:0.5 }
+}
+.a-breathe { animation:a-breathe 2.5s ease-in-out infinite }
+
+/* Bob (WhatsApp rects) */
+@keyframes a-bob {
+  0%,100% { transform:translateY(0) }
+  50% { transform:translateY(-3px) }
+}
+.a-bob { animation:a-bob 1.4s ease-in-out infinite }
+
+/* Draw path (WhatsApp checkmark) */
+@keyframes a-draw {
+  0% { stroke-dashoffset:20; opacity:0 }
+  40% { opacity:1 }
+  60% { stroke-dashoffset:0; opacity:1 }
+  100% { stroke-dashoffset:0; opacity:0 }
+}
+.a-draw { animation:a-draw 2.5s ease-in-out infinite; stroke-dasharray:20 }
+
+/* Spin (Tasks circle) */
+@keyframes a-spin {
+  0% { transform:rotate(0deg) }
+  100% { transform:rotate(360deg) }
+}
+.a-spin { animation:a-spin 2.5s linear infinite }
+
+/* Draw check (Tasks checkmark) */
+@keyframes a-draw-check {
+  0%,100% { stroke-dashoffset:12; opacity:0 }
+  40% { opacity:1 }
+  60% { stroke-dashoffset:0; opacity:1 }
+}
+.a-draw-check { animation:a-draw-check 2.5s ease-out infinite; stroke-dasharray:12 }
+
+/* Bar height variants (Reports) */
+@keyframes a-bar-h0 { 0%,100% { height:8px } 50% { height:20px } }
+@keyframes a-bar-h1 { 0%,100% { height:12px } 50% { height:16px } }
+@keyframes a-bar-h2 { 0%,100% { height:16px } 50% { height:12px } }
+@keyframes a-bar-h3 { 0%,100% { height:20px } 50% { height:8px } }
+.a-bar-h0 { animation:a-bar-h0 1.5s ease-in-out infinite }
+.a-bar-h1 { animation:a-bar-h1 1.5s ease-in-out infinite }
+.a-bar-h2 { animation:a-bar-h2 1.5s ease-in-out infinite }
+.a-bar-h3 { animation:a-bar-h3 1.5s ease-in-out infinite }
+
+/* Dash move (EnergyLines) */
+@keyframes a-dash { 100% { stroke-dashoffset:-36 } }
+.a-dash { animation:a-dash 1.2s linear infinite; stroke-dasharray:4 14 }
+
+/* Ecosystem node pulse */
+@keyframes a-pulse-node { 0%,100% { opacity:0.1 } 50% { opacity:0.35 } }
+.a-pulse-node { animation:a-pulse-node 3s ease-in-out infinite }
+
+/* Ecosystem dash slow */
+@keyframes a-dash-slow { 100% { stroke-dashoffset:-26 } }
+.a-dash-slow { animation:a-dash-slow 2.5s linear infinite; stroke-dasharray:3 10 }
+
+/* Ecosystem floating particles */
+@keyframes a-float-py { 0%,100% { transform:translateY(0); opacity:0.1 } 50% { transform:translateY(-5px); opacity:0.5 } }
+.a-float-py { animation:a-float-py 5s ease-in-out infinite }
+
+/* Pulse opacity (generic) */
+@keyframes a-pulse { 0%,100% { opacity:1 } 50% { opacity:0.7 } }
+.a-pulse { animation:a-pulse 2s ease-in-out infinite }
+
+/* Blink cursor */
+@keyframes a-blink { 0%,100% { opacity:1 } 50% { opacity:0 } }
+.a-blink { animation:a-blink 0.5s step-end infinite }
+
+/* Scale pulse (Dashboard values) */
+@keyframes a-scale-pulse { 0%,100% { transform:scale(1) } 50% { transform:scale(1.1) } }
+.a-scale-pulse { animation:a-scale-pulse 3s ease-in-out infinite }
+
+/* Pop in (stock quantity change) */
+@keyframes a-pop-in { 0% { transform:scale(1.2) } 100% { transform:scale(1) } }
+.a-pop-in { animation:a-pop-in 0.15s ease-out }
+
+/* Bar grow (stock bar change) */
+@keyframes a-bar-grow { 0% { width:0% } 100% { width:var(--w) } }
+.a-bar-grow { animation:a-bar-grow 0.4s ease-out }

@@ -136,7 +136,7 @@ export function Experience() {
           }}>
           {scenes.map((label, i) => (
             <button key={i} onClick={() => goTo(i)}
-              className="rounded-full transition-all duration-500"
+              className="rounded-full transition-all duration-500 relative before:absolute before:inset-[-18px] before:content-['']"
               style={{
                 width: i === active ? 24 : 7,
                 height: 7,
@@ -145,9 +145,9 @@ export function Experience() {
               }}
               aria-label={label} />
           ))}
-          <div className="w-[1px] h-3 mx-1" style={{ background: "var(--boundary)" }} />
+          <div className="w-[1px] h-6 mx-1" style={{ background: "var(--boundary)" }} />
           <button onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
-            className="text-[clamp(10px,1.5vw,13px)] select-none"
+            className="text-[clamp(10px,1.5vw,13px)] select-none min-w-[44px] min-h-[44px] flex items-center justify-center"
             style={{ color: "var(--measure-dim)" }}>
             {theme === "light" ? "☀" : "☾"}
           </button>
