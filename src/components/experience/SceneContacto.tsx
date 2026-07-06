@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 
 export function SceneContacto() {
@@ -23,46 +22,35 @@ export function SceneContacto() {
         </svg>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col items-center w-full max-w-md text-center relative z-[1]">
+      <div className="flex flex-col items-center w-full max-w-md text-center relative z-[1] a-fu">
 
-        <motion.div className="mb-6"
-          animate={{ scale: [1, 1.04, 1] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
-          <Image src="/logo.png" alt="TOALESCO" width="72" height="72"
-            className="w-[clamp(48px,6vw,72px)] h-auto" />
-        </motion.div>
+        <div className="mb-6 a-si">
+          <div style={{ animation: "breathing 3s ease-in-out infinite" }}>
+            <Image src="/logo.png" alt="TOALESCO" width="72" height="72"
+              className="w-[clamp(48px,6vw,72px)] h-auto" />
+          </div>
+        </div>
 
-        <h2 className="text-[clamp(28px,5vw,52px)] font-light tracking-tight mb-2"
+        <h2 className="text-[clamp(28px,5vw,52px)] font-light tracking-tight mb-2 a-fu a-d1"
           style={{ color: "var(--measure)" }}>
           TOALESCO
         </h2>
-        <p className="text-[clamp(12px,1.8vw,15px)] font-light mb-8"
+        <p className="text-[clamp(12px,1.8vw,15px)] font-light mb-8 a-fu a-d2"
           style={{ color: "var(--measure-dim)" }}>
           Transformamos ideas en sistemas que funcionan.
         </p>
 
         <div className="flex flex-col gap-3 w-full max-w-xs">
-          <motion.a
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            href="https://www.instagram.com/toalesco.dev/"
+          <a href="https://www.instagram.com/toalesco.dev/"
             target="_blank" rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-[8px] font-medium transition-all duration-200"
+            className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-[8px] font-medium transition-all duration-200 a-fu a-d1"
             style={{ background: "var(--active)", color: "#fff" }}>
             <span>Cuéntanos tu idea</span>
             <span className="text-sm">→</span>
-          </motion.a>
-          <motion.a
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            href="mailto:toalesco@tutamail.com"
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-[8px] transition-all duration-200 group"
+          </a>
+
+          <a href="mailto:toalesco@tutamail.com"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-[8px] transition-all duration-200 group a-fu a-d2"
             style={{ border: "1px solid var(--boundary)", background: "var(--substrate)" }}>
             <span className="text-[clamp(14px,2vw,18px)] shrink-0">✉</span>
             <div className="text-left min-w-0">
@@ -74,15 +62,11 @@ export function SceneContacto() {
               style={{ color: "var(--measure-dim)" }}>
               →
             </span>
-          </motion.a>
+          </a>
 
-          <motion.a
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            href="https://www.instagram.com/toalesco.dev/"
+          <a href="https://www.instagram.com/toalesco.dev/"
             target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-[8px] transition-all duration-200 group"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-[8px] transition-all duration-200 group a-fu a-d3"
             style={{ border: "1px solid var(--boundary)", background: "var(--substrate)" }}>
             <span className="text-[clamp(14px,2vw,18px)] shrink-0">📷</span>
             <div className="text-left min-w-0">
@@ -94,20 +78,14 @@ export function SceneContacto() {
               style={{ background: "var(--active)", color: "#fff", fontFamily: "ui-monospace,monospace" }}>
               DM
             </span>
-          </motion.a>
-
-
+          </a>
         </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-[clamp(10px,1.5vw,13px)] mt-8"
+        <p className="text-[clamp(10px,1.5vw,13px)] mt-8 a-fu a-d4"
           style={{ color: "var(--measure-dim)" }}>
           Responde en menos de 24 hrs
-        </motion.p>
-      </motion.div>
+        </p>
+      </div>
     </section>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, type JSX } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 
 // ─── ECOSYSTEM (keep as decorative background) ───
 
@@ -43,7 +42,7 @@ interface Step {
   num: string;
   title: string;
   desc: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
 }
 
 const steps: Step[] = [
@@ -97,13 +96,10 @@ const steps: Step[] = [
 ];
 
 function StepCard({ step, idx }: { step: Step; idx: number }) {
+  const delay = idx * 0.12;
   return (
-    <motion.div
-      className="flex flex-col items-center text-center gap-2 p-[clamp(12px,1.5vw,20px)] rounded-xl flex-1 min-w-0"
-      style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)" }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}>
+    <div className={"flex flex-col items-center text-center gap-2 p-[clamp(12px,1.5vw,20px)] rounded-xl flex-1 min-w-0 a-fu"}
+      style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)", animationDelay: delay + "s" }}>
       <div className="flex items-center gap-2">
         <span className="text-[10px] font-mono tracking-widest" style={{ color: "var(--measure-dim)" }}>{step.num}</span>
         <div className="w-8 h-8 rounded-full flex items-center justify-center"
@@ -117,7 +113,7 @@ function StepCard({ step, idx }: { step: Step; idx: number }) {
       <p className="text-[clamp(11px,1.1vw,13px)] leading-relaxed" style={{ color: "var(--measure-secondary)" }}>
         {step.desc}
       </p>
-    </motion.div>
+    </div>
   );
 }
 
@@ -190,20 +186,17 @@ function Typewriter() {
     <div className="px-4 relative z-10 h-[44px] flex items-center justify-center">
       <div className="text-center max-w-xs mx-auto">
         {phase === "transition" ? (
-          <motion.div className="flex gap-2 items-center justify-center"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}>
+          <div className="flex gap-2 items-center justify-center a-fi"
+            style={{ animationDuration: "0.4s" }}>
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--active)" }} />
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--active)" }} />
             <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--active)" }} />
-          </motion.div>
+          </div>
         ) : (
-          <motion.div key={lineIdx} className="text-[clamp(12px,1.4vw,14px)] font-medium leading-relaxed"
-            style={{ color: "var(--measure-secondary)" }}
-            initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}>
+          <div key={lineIdx} className="text-[clamp(12px,1.4vw,14px)] font-medium leading-relaxed a-fu"
+            style={{ color: "var(--measure-secondary)", animationDuration: "0.25s" }}>
             {typing}<span className="a-blink" style={{ color: "var(--active)" }}>|</span>
-          </motion.div>
+          </div>
         )}
       </div>
     </div>
@@ -227,17 +220,14 @@ export function SceneLiveSystem() {
         <div className="w-full max-w-3xl flex flex-col items-center gap-6">
 
           {/* Title */}
-          <motion.div className="text-center"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
+          <div className="text-center a-fu">
             <h2 className="text-[clamp(22px,4vw,40px)] font-light tracking-tight" style={{ color: "var(--measure)" }}>
               Cómo trabajamos
             </h2>
             <p className="text-[clamp(12px,1.4vw,15px)] font-light mt-1" style={{ color: "var(--measure-dim)" }}>
               De la idea al sistema funcionando · sin complicaciones
             </p>
-          </motion.div>
+          </div>
 
           {/* Steps */}
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">

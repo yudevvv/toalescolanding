@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 
 const transforms = [
@@ -14,68 +13,43 @@ const transforms = [
 export function SceneIdea() {
   return (
     <section className="h-dvh flex items-center justify-center relative overflow-hidden px-6" style={{ background: "var(--substrate)" }}>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col items-center text-center max-w-xl">
+      <div className="flex flex-col items-center text-center max-w-xl a-fu">
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
+        <div className="a-si">
           <Image src="/logo.png" alt="TOALESCO" width="96" height="96"
             className="w-[clamp(72px,8vw,96px)] h-auto mb-4" priority />
-        </motion.div>
+        </div>
 
-          <motion.span
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[clamp(18px,3.5vw,24px)] font-mono tracking-[0.3em] mb-2"
+        <div className="a-fu a-d1">
+          <span className="text-[clamp(18px,3.5vw,24px)] font-mono tracking-[0.3em] mb-2 inline-block"
             style={{ color: "var(--active)" }}>
             TOALESCO
-          </motion.span>
-          <motion.p
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[clamp(11px,1.4vw,14px)] font-light mb-6 tracking-wide"
+          </span>
+          <p className="text-[clamp(11px,1.4vw,14px)] font-light mb-6 tracking-wide"
             style={{ color: "var(--measure-secondary)" }}>
             Herramientas digitales para emprendedores
-          </motion.p>
+          </p>
+        </div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[clamp(32px,8vw,80px)] font-light leading-[1.1] tracking-tight mb-8"
+        <h1 className="text-[clamp(32px,8vw,80px)] font-light leading-[1.1] tracking-tight mb-8 a-fu a-d2"
           style={{ color: "var(--measure)" }}>
           Tu idea.<br />
           <span style={{ color: "var(--active)" }}>Nuestro software.</span>
-        </motion.h1>
+        </h1>
 
         <div className="space-y-1.5 mb-8">
           {transforms.map(([from, to], i) => (
-            <motion.p
-              key={from}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.35 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[clamp(13px,2vw,16px)] font-mono tracking-tight"
-              style={{ color: "var(--measure)" }}>
+            <p key={from}
+              className="text-[clamp(13px,2vw,16px)] font-mono tracking-tight a-sr"
+              style={{ animationDelay: `${0.35 + i * 0.08}s`, color: "var(--measure)" }}>
               <span style={{ color: "var(--measure-dim)" }}>{from}</span>
               {" "}→{" "}
               <span style={{ color: "var(--active)" }}>{to}</span>
-            </motion.p>
+            </p>
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-center gap-1.5 mb-6">
+        <div className="flex flex-col items-center gap-1.5 mb-6 a-fu a-d8">
           <span className="text-[clamp(11px,1.3vw,13px)] inline-flex items-center gap-1" style={{ color: "var(--measure-secondary)" }}>
             <span className="text-[8px]" style={{ color: "var(--active)", opacity: 0.6 }}>▶</span>
             Para dueños de negocio que no saben de tecnología
@@ -88,29 +62,21 @@ export function SceneIdea() {
             <span className="text-[8px]" style={{ color: "var(--active)", opacity: 0.6 }}>▶</span>
             Hablamos tu idioma, no código
           </span>
-        </motion.div>
+        </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[clamp(14px,2.2vw,18px)] font-light leading-relaxed max-w-lg"
+        <p className="text-[clamp(14px,2.2vw,18px)] font-light leading-relaxed max-w-lg a-fu a-d10"
           style={{ color: "var(--measure)" }}>
           Deja de adaptar tu negocio a las herramientas.{" "}
           <span style={{ color: "var(--active)", fontWeight: 450 }}>
             Construimos herramientas adaptadas a tu negocio.
           </span>
-        </motion.p>
-      </motion.div>
+        </p>
+      </div>
 
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1.4 }}
-        className="absolute bottom-10 text-[clamp(9px,1.3vw,11px)] tracking-widest select-none"
-        style={{ color: "var(--measure-dim)", opacity: 0.25, fontFamily: "ui-monospace,monospace" }}>
+      <span className="absolute bottom-10 text-[clamp(9px,1.3vw,11px)] tracking-widest select-none a-fi"
+        style={{ animationDelay: "1.4s", color: "var(--measure-dim)", opacity: 0.25, fontFamily: "ui-monospace,monospace" }}>
         → desliza
-      </motion.span>
+      </span>
     </section>
   );
 }
