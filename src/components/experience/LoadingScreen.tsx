@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const letters = "TOALESCO".split("");
 
@@ -12,6 +12,7 @@ interface Props {
 export function LoadingScreen({ onDone }: Props) {
   const [phase, setPhase] = useState<"letters" | "converge" | "done">("letters");
   const [shown, setShown] = useState(0);
+  const startRef = useRef(Date.now());
 
   useEffect(() => {
     if (shown < letters.length) {
@@ -25,7 +26,9 @@ export function LoadingScreen({ onDone }: Props) {
 
   useEffect(() => {
     if (phase === "converge") {
-      const t = setTimeout(() => { setPhase("done"); onDone(); }, 600);
+      const elapsed = Date.now() - startRef.current;
+      const remaining = Math.max(200, 2500 - elapsed);
+      const t = setTimeout(() => { setPhase("done"); onDone(); }, remaining);
       return () => clearTimeout(t);
     }
   }, [phase, onDone]);

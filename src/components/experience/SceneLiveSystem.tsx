@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, type JSX } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// ─── ECOSYSTEM ───
+// ─── ECOSYSTEM (keep as decorative background) ───
 
 const nodes = [
   { x: 12, y: 22 }, { x: 78, y: 18 }, { x: 52, y: 32 },
@@ -16,337 +16,196 @@ const connections = [[0,1],[0,2],[1,2],[2,3],[2,4],[3,5],[4,5],[5,6],[6,7],[3,7]
 function Ecosystem() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      <svg className="w-full h-full" style={{ opacity: 0.15 }}>
+      <svg className="w-full h-full" style={{ opacity: "var(--eco-opacity, 0.08)" }}>
         {connections.map(([a, b], i) => (
           <g key={i}>
             <line x1={`${nodes[a].x}%`} y1={`${nodes[a].y}%`} x2={`${nodes[b].x}%`} y2={`${nodes[b].y}%`}
-              stroke="var(--pb-solution)" strokeWidth="0.5" opacity="0.3" />
+              stroke="var(--active)" strokeWidth="0.4" opacity="0.15" />
             <line x1={`${nodes[a].x}%`} y1={`${nodes[a].y}%`} x2={`${nodes[b].x}%`} y2={`${nodes[b].y}%`}
-              stroke="var(--pb-energy)" strokeWidth="1" strokeDasharray="3 10" opacity="0.25"
+              stroke="var(--active)" strokeWidth="0.8" strokeDasharray="3 10" opacity="0.15"
               className="a-dash-slow"
               style={{ animationDelay: `${i * 0.12}s` }} />
           </g>
         ))}
         {nodes.map((n, i) => (
-          <circle key={i} cx={`${n.x}%`} cy={`${n.y}%`} r="2.5" fill="var(--pb-solution)" opacity="0.2"
+          <circle key={i} cx={`${n.x}%`} cy={`${n.y}%`} r="2" fill="var(--active)" opacity="0.12"
             className="a-pulse-node"
             style={{ animationDuration: `${3 + i * 0.3}s` }} />
         ))}
       </svg>
-      {[0,1,2,3,4].map((i) => (
-        <div key={i} className="absolute rounded-full a-float-py"
-          style={{ width: 2, height: 2, background: "var(--pb-energy)", left: `${15 + i * 16}%`, animationDuration: `${5 + i}s`, animationDelay: `${i * 0.6}s` }} />
-      ))}
     </div>
   );
 }
 
-// ─── INTERFACE PANELS ───
+// ─── STEPS ───
 
-function PanelLanding() {
-  return (
-    <div className="w-full max-w-xs lg:max-w-md mx-auto rounded-xl overflow-hidden"
-      style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)" }}>
-      <div className="h-1.5" style={{ background: "var(--pb-energy)" }} />
-      <div className="p-3 sm:p-4">
-        <div className="text-[9px] font-semibold tracking-wider mb-2" style={{ color: "var(--measure-dim)" }}>toalesco.cl/lead</div>
-        <h3 className="text-sm font-semibold mb-2" style={{ color: "var(--pb-text)" }}>¿Listo para digitalizar tu negocio?</h3>
-        <div className="flex flex-col gap-1.5 mb-2">
-          {[
-            { label: "Nombre", value: "Juan Pérez" },
-            { label: "Email", value: "juan@email.com" },
-            { label: "Teléfono", value: "+56 9 1234 5678" },
-          ].map((f) => (
-            <div key={f.label} className="text-[10px]">
-              <span style={{ color: "var(--measure-dim)" }}>{f.label}</span>
-              <div className="h-6 rounded-md px-2 flex items-center text-xs" style={{ background: "color-mix(in srgb, var(--substrate) 85%, var(--measure))", color: "var(--pb-text)" }}>{f.value}</div>
-            </div>
-          ))}
-        </div>
-        <div className="h-7 rounded-md flex items-center justify-center text-xs font-medium a-pulse"
-          style={{ background: "var(--pb-energy)", color: "#fff" }}>
-          Enviar → Enviado ✓
-        </div>
-      </div>
-    </div>
-  );
+interface Step {
+  num: string;
+  title: string;
+  desc: string;
+  icon: JSX.Element;
 }
 
-function PanelExcel() {
-  return (
-    <div className="w-full max-w-xs lg:max-w-md mx-auto rounded-xl overflow-hidden"
-      style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)" }}>
-      <div className="flex items-center gap-1.5 px-3 py-1.5 border-b text-[10px] font-mono" style={{ borderColor: "var(--boundary)", color: "var(--measure-dim)" }}>
-        <span style={{ color: "#22C55E" }}>●</span> inventario_automatico.py
-      </div>
-      <div className="p-3">
-        <div className="flex gap-1 mb-2">
-          {["Producto", "Stock", "Precio", "Total"].map((h) => (
-            <div key={h} className="flex-1 text-[8px] font-semibold" style={{ color: "var(--measure-dim)" }}>{h}</div>
-          ))}
-        </div>
-        {[
-          { name: "Zapatos", stock: 45, price: "15.990", total: "719.550" },
-          { name: "Camisetas", stock: 3, price: "9.990", total: "29.970" },
-          { name: "Gorras", stock: 12, price: "12.500", total: "150.000" },
-          { name: "Chaquetas", stock: 8, price: "45.000", total: "360.000" },
-        ].map((row, i) => (
-          <div key={i} className="flex gap-1 py-1 text-[10px] border-b" style={{ borderColor: "var(--boundary)" }}>
-            <span className="flex-1 font-medium" style={{ color: "var(--pb-text)" }}>{row.name}</span>
-            <span className={`flex-1 font-mono tabular-nums${row.stock < 5 ? " a-pulse" : ""}`} style={{ color: row.stock < 5 ? "#EF4444" : "var(--pb-text)" }}>
-              {row.stock}
-            </span>
-            <span className="flex-1 font-mono" style={{ color: "var(--pb-text)" }}>{row.price}</span>
-            <span className="flex-1 font-mono" style={{ color: "var(--pb-text)" }}>{row.total}</span>
-          </div>
-        ))}
-        <div className="mt-2 text-[9px] font-mono a-pulse" style={{ color: "#6366F1" }}>
-          &gt; alerta_stock_bajo("Camisetas") → Pedido automático generado ✓
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PanelPython() {
-  const [step, setStep] = useState(0);
-  const lines = [
-    { text: "> import toalesco.engine as te", color: "#6366F1" },
-    { text: "> te.load_clientes('whatsapp')", color: "#6366F1" },
-    { text: "  ✓ 12 mensajes nuevos procesados", color: "#22C55E" },
-    { text: "> te.clasificar_lead(messages)", color: "#6366F1" },
-    { text: "  ✓ 3 leads identificados como calientes", color: "#22C55E" },
-    { text: "> te.asignar_crm(leads_calientes)", color: "#6366F1" },
-    { text: "  ✓ Leads asignados a ejecutivo", color: "#22C55E" },
-    { text: "> te.enviar_bienvenida(leads)", color: "#6366F1" },
-    { text: "  ✓ Secuencia de emails activada", color: "#22C55E" },
-    { text: "> te.sincronizar_dashboard()", color: "#6366F1" },
-    { text: "  ✓ Dashboard actualizado en tiempo real", color: "#22C55E" },
-    { text: "", color: "transparent" },
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => setStep((s) => (s + 1) % lines.length), 500);
-    return () => clearInterval(interval);
-  }, [lines.length]);
-
-  return (
-    <div className="w-full max-w-xs lg:max-w-md mx-auto rounded-xl overflow-hidden"
-      style={{ background: "#0A0E17", boxShadow: "0 4px 24px rgba(0,0,0,0.12)", border: "1px solid rgba(255,255,255,0.06)" }}>
-      <div className="flex items-center gap-1.5 px-3 py-1.5 border-b text-[10px]" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-        <div className="flex gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ background: "#EF4444" }} />
-          <div className="w-2 h-2 rounded-full" style={{ background: "#F59E0B" }} />
-          <div className="w-2 h-2 rounded-full" style={{ background: "#22C55E" }} />
-        </div>
-        <span className="ml-2 font-mono" style={{ color: "rgba(255,255,255,0.4)" }}>toalesco_engine — bash</span>
-      </div>
-      <div className="p-3 font-mono text-[11px] leading-relaxed">
-        {lines.slice(0, step + 1).map((line, i) => (
-          <motion.div key={i} initial={{ opacity: 0, x: -4 }} animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.2 }} style={{ color: line.color }}>
-            {line.text || "\u00A0"}
-          </motion.div>
-        ))}
-        <span style={{ color: "#22C55E" }} className="a-blink">▊</span>
-      </div>
-    </div>
-  );
-}
-
-function PanelDashboard() {
-  return (
-    <div className="w-full max-w-xs lg:max-w-md mx-auto rounded-xl overflow-hidden"
-      style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)" }}>
-      <div className="flex items-center gap-2 px-3 py-1.5 border-b text-[9px] font-semibold tracking-wider" style={{ borderColor: "var(--boundary)", color: "var(--measure-dim)" }}>
-        <span style={{ color: "var(--pb-solution)" }}>◉</span> Dashboard · TOALESCO
-        <span className="ml-auto a-pulse" style={{ color: "#22C55E" }}>
-          ● En vivo
-        </span>
-      </div>
-      <div className="p-3">
-        <div className="grid grid-cols-3 gap-2 mb-3">
-          {[
-            { label: "Ventas", value: "$2.340", change: "+12%", color: "var(--pb-energy)" },
-            { label: "Leads", value: "18", change: "+5", color: "var(--pb-solution)" },
-            { label: "Conversión", value: "4.2%", change: "+0.8%", color: "#22C55E" },
-          ].map((k) => (
-            <div key={k.label} className="text-center">
-              <div className="text-[8px]" style={{ color: "var(--measure-dim)" }}>{k.label}</div>
-              <div className="text-sm font-bold tabular-nums mt-0.5 a-scale-pulse" style={{ color: k.color }}>
-                {k.value}
-              </div>
-              <div className="text-[8px]" style={{ color: "#22C55E" }}>{k.change}</div>
-            </div>
-          ))}
-        </div>
-        <div className="flex items-end gap-1 h-14">
-          {[35, 55, 42, 78, 61, 89, 73].map((h, i) => (
-            <motion.div key={i} className="flex-1 rounded-t-sm" style={{ background: "var(--pb-solution)" }}
-              animate={{ height: `${h + (i % 3) * 5}%` }} transition={{ duration: 0.8, delay: i * 0.04 }} />
-          ))}
-        </div>
-        <div className="flex justify-between mt-1">
-          {["L", "M", "M", "J", "V", "S", "D"].map((d, idx) => (
-            <span key={idx} className="text-[7px]" style={{ color: "var(--measure-dim)" }}>{d}</span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PanelCRM() {
-  const [statuses, setStatuses] = useState(["Nuevo", "En seguimiento", "Contactado", "Cerrado"]);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStatuses((prev) => {
-        const next = [...prev];
-        const statusOrder = ["Nuevo", "En seguimiento", "Contactado", "Cerrado"];
-        for (let i = 0; i < next.length; i++) {
-          const idx = statusOrder.indexOf(next[i]);
-          if (idx < statusOrder.length - 1 && Math.random() > 0.4) {
-            next[i] = statusOrder[idx + 1];
-          }
-        }
-        return next;
-      });
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="w-full max-w-xs lg:max-w-md mx-auto rounded-xl overflow-hidden"
-      style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)" }}>
-      <div className="flex items-center gap-2 px-3 py-1.5 border-b text-[9px]" style={{ borderColor: "var(--boundary)", color: "var(--measure-dim)" }}>
-        <span style={{ color: "var(--pb-solution)", fontWeight: 600 }}>CRM</span>
-        <span className="ml-auto">12 contactos activos</span>
-      </div>
-      <div className="p-3 flex flex-col gap-1">
-        {[
-          { name: "María García", source: "WhatsApp", statusIdx: 0 },
-          { name: "Pedro López", source: "Landing", statusIdx: 1 },
-          { name: "Ana Martínez", source: "Instagram", statusIdx: 2 },
-          { name: "Carlos Soto", source: "WhatsApp", statusIdx: 3 },
-        ].map((contact, i) => {
-          const status = statuses[contact.statusIdx] || "Nuevo";
-          return (
-            <div key={contact.name} className="flex items-center gap-2 py-1.5 text-xs border-b" style={{ borderColor: "var(--boundary)" }}>
-              <div className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-medium shrink-0"
-                style={{ background: "color-mix(in srgb, var(--pb-solution) 10%, transparent)", color: "var(--pb-solution)" }}>
-                {contact.name[0]}
-              </div>
-              <div className="flex-1 min-w-0">
-                <span style={{ color: "var(--pb-text)" }}>{contact.name}</span>
-                <span className="block text-[9px]" style={{ color: "var(--measure-dim)" }}>{contact.source}</span>
-              </div>
-              <motion.span className="text-[9px] px-1.5 py-0.5 rounded-full shrink-0"
-                style={{
-                  background: status === "Nuevo" ? "rgba(232,164,71,0.12)" : status === "Cerrado" ? "rgba(34,197,94,0.12)" : "rgba(41,100,242,0.1)",
-                  color: status === "Nuevo" ? "var(--pb-energy)" : status === "Cerrado" ? "#22C55E" : "var(--pb-solution)",
-                }}
-                key={status} initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 0.15 }}>
-                {status}
-              </motion.span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function PanelInventory() {
-  const [stock, setStock] = useState({ Zapatos: 45, Camisetas: 3, Gorras: 12, Chaquetas: 8 });
-  const [alert, setAlert] = useState<string | null>(null);
-  const tick = useRef(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      tick.current++;
-      const prod = ["Camisetas", "Gorras", "Zapatos"][tick.current % 3];
-      setStock((s) => ({ ...s, [prod]: Math.max(1, s[prod as keyof typeof s] + (Math.random() > 0.5 ? 1 : -1)) }));
-      if (tick.current % 3 === 0) {
-        setAlert(`📦 Pedido recibido: ${Math.floor(Math.random() * 15 + 10)} unidades`);
-        setTimeout(() => setAlert(null), 2500);
-      }
-    }, 3500);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="w-full max-w-xs lg:max-w-md mx-auto rounded-xl overflow-hidden"
-      style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)" }}>
-      <div className="flex items-center gap-2 px-3 py-1.5 border-b text-[9px]" style={{ borderColor: "var(--boundary)", color: "var(--measure-dim)" }}>
-        <span style={{ color: "var(--pb-solution)", fontWeight: 600 }}>Inventario</span>
-        <span className="ml-auto text-[8px] a-pulse" style={{ color: "#22C55E" }}>
-          ● Sincronizado
-        </span>
-      </div>
-      <div className="p-3">
-        {Object.entries(stock).map(([product, qty]) => (
-          <div key={product} className="flex items-center gap-2 py-1 text-xs border-b" style={{ borderColor: "var(--boundary)" }}>
-            <span className="flex-1 font-medium" style={{ color: "var(--pb-text)" }}>{product}</span>
-            <span className="font-mono tabular-nums w-6 text-right" style={{ color: qty < 5 ? "#EF4444" : "var(--pb-text)" }}>
-              {qty}
-            </span>
-            <div className="w-14 h-1.5 rounded-full overflow-hidden" style={{ background: "var(--boundary)" }}>
-              <div className="h-full rounded-full transition-all duration-300"
-                style={{ background: qty < 5 ? "#EF4444" : "var(--pb-solution)", width: `${Math.min(100, (qty / 60) * 100)}%` }} />
-            </div>
-          </div>
-        ))}
-        <AnimatePresence>
-          {alert && (
-            <motion.div className="text-[10px] mt-1.5 pt-1.5 border-t" style={{ borderColor: "var(--boundary)", color: "var(--pb-solution)" }}
-              initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              {alert}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
-}
-
-// ─── PANEL DATA ───
-
-const panels = [
-  { key: "landing", component: PanelLanding, label: "Landing Page · Captación de leads" },
-  { key: "excel", component: PanelExcel, label: "Inventario · Automatización de datos" },
-  { key: "python", component: PanelPython, label: "TOALESCO Engine · Automatización inteligente" },
-  { key: "dashboard", component: PanelDashboard, label: "Dashboard · Métricas en tiempo real" },
-  { key: "crm", component: PanelCRM, label: "CRM · Gestión de clientes automatizada" },
-  { key: "inventory", component: PanelInventory, label: "Inventario · Stock sincronizado" },
+const steps: Step[] = [
+  {
+    num: "01",
+    title: "Diagnóstico",
+    desc: "Analizamos tus procesos actuales y detectamos qué se puede automatizar para ahorrarte tiempo y dinero.",
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="var(--active)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+      </svg>
+    ),
+  },
+  {
+    num: "02",
+    title: "Propuesta",
+    desc: "Diseñamos una solución a tu medida con presupuesto claro y sin sorpresas. Tú decides qué implementar.",
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="var(--active)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+        <polyline points="10 9 9 9 8 9" />
+      </svg>
+    ),
+  },
+  {
+    num: "03",
+    title: "Desarrollo",
+    desc: "Construimos tu sistema, lo integramos con tus herramientas actuales y lo probamos hasta que funcione solo.",
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="var(--active)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+      </svg>
+    ),
+  },
+  {
+    num: "04",
+    title: "Entrega",
+    desc: "Implementamos, te capacitamos y nos aseguramos de que todo funcione. Soporte continuo incluido.",
+    icon: (
+      <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="var(--active)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+        <polyline points="22 4 12 14.01 9 11.01" />
+      </svg>
+    ),
+  },
 ];
 
-// ─── ENDING ───
-
-function Ending() {
+function StepCard({ step, idx }: { step: Step; idx: number }) {
   return (
-    <div className="flex flex-col items-center text-center gap-2">
-      <motion.p className="text-[clamp(18px,3.5vw,34px)] font-light leading-snug max-w-xs lg:max-w-md"
-        style={{ color: "var(--measure)" }}
-        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
-        Mientras trabajas…
-        <span className="block mt-1 font-normal" style={{ color: "var(--measure-secondary)" }}>
-          tu negocio sigue funcionando.
-        </span>
-      </motion.p>
-      <motion.div
-        className="w-12 h-px" style={{ background: "var(--boundary)" }}
-        initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-      />
-      <motion.p className="text-[clamp(18px,3.5vw,34px)] font-light leading-snug max-w-xs lg:max-w-md"
-        style={{ color: "var(--measure)" }}
-        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-        La automatización no es velocidad.
-        <span className="block mt-1 font-normal" style={{ color: "var(--pb-energy)" }}>
-          Es libertad.
-        </span>
-      </motion.p>
+    <motion.div
+      className="flex flex-col items-center text-center gap-2 p-[clamp(12px,1.5vw,20px)] rounded-xl flex-1 min-w-0"
+      style={{ background: "var(--pb-module)", border: "1px solid var(--boundary)" }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}>
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] font-mono tracking-widest" style={{ color: "var(--measure-dim)" }}>{step.num}</span>
+        <div className="w-8 h-8 rounded-full flex items-center justify-center"
+          style={{ background: "color-mix(in srgb, var(--active) 10%, transparent)" }}>
+          {step.icon}
+        </div>
+      </div>
+      <h3 className="text-[clamp(13px,1.4vw,15px)] font-semibold" style={{ color: "var(--measure)" }}>
+        {step.title}
+      </h3>
+      <p className="text-[clamp(11px,1.1vw,13px)] leading-relaxed" style={{ color: "var(--measure-secondary)" }}>
+        {step.desc}
+      </p>
+    </motion.div>
+  );
+}
+
+// ─── TYPEWRITER ───
+
+const missionMessages = [
+  "Tu negocio funciona solo · incluso mientras duermes",
+  "Capta más clientes sin estar pegado al teléfono",
+  "Olvídate del papeleo · nosotros lo hacemos por ti",
+  "Menos tiempo en pantalla · más tiempo en lo tuyo",
+  "Resultados reales sin complicaciones técnicas",
+  "Tu emprendimiento merece crecer sin dolores de cabeza",
+];
+
+function Typewriter() {
+  const [typing, setTyping] = useState("");
+  const [lineIdx, setLineIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+  const [phase, setPhase] = useState<"typing" | "paused" | "transition">("typing");
+
+  useEffect(() => {
+    if (phase === "transition") {
+      const target = lineIdx === 2 ? 3 : 0;
+      const t = setTimeout(() => {
+        setTyping("");
+        setCharIdx(0);
+        setLineIdx(target);
+        setPhase("typing");
+      }, 2500);
+      return () => clearTimeout(t);
+    }
+  }, [phase, lineIdx]);
+
+  useEffect(() => {
+    if (phase === "paused") {
+      const isSetEnd = lineIdx === 2 || lineIdx === 5;
+      const delay = isSetEnd ? 500 : 2000;
+      const t = setTimeout(() => {
+        if (isSetEnd) {
+          setPhase("transition");
+        } else {
+          setTyping("");
+          setCharIdx(0);
+          setLineIdx((i) => i + 1);
+          setPhase("typing");
+        }
+      }, delay);
+      return () => clearTimeout(t);
+    }
+  }, [phase, lineIdx]);
+
+  useEffect(() => {
+    if (phase !== "typing") return;
+    const msg = missionMessages[lineIdx];
+    if (!msg) return;
+    if (charIdx < msg.length) {
+      const delay = 12 + Math.random() * 16;
+      const t = setTimeout(() => {
+        setTyping(msg.slice(0, charIdx + 1));
+        setCharIdx(charIdx + 1);
+      }, delay);
+      return () => clearTimeout(t);
+    } else {
+      const t = setTimeout(() => setPhase("paused"), 1800);
+      return () => clearTimeout(t);
+    }
+  }, [phase, lineIdx, charIdx]);
+
+  return (
+    <div className="px-4 relative z-10 h-[44px] flex items-center justify-center">
+      <div className="text-center max-w-xs mx-auto">
+        {phase === "transition" ? (
+          <motion.div className="flex gap-2 items-center justify-center"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--active)" }} />
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--active)" }} />
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--active)" }} />
+          </motion.div>
+        ) : (
+          <motion.div key={lineIdx} className="text-[clamp(12px,1.4vw,14px)] font-medium leading-relaxed"
+            style={{ color: "var(--measure-secondary)" }}
+            initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}>
+            {typing}<span className="a-blink" style={{ color: "var(--active)" }}>|</span>
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 }
@@ -354,97 +213,45 @@ function Ending() {
 // ─── MAIN ───
 
 export function SceneLiveSystem() {
-  const [panelIdx, setPanelIdx] = useState(0);
-  const [phase, setPhase] = useState<"playing" | "ending" | "done">("playing");
-  const [cycle, setCycle] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (phase !== "playing") return;
-    const interval = setInterval(() => {
-      setPanelIdx((i) => {
-        if (i >= panels.length - 1) { setPhase("ending"); return i; }
-        return i + 1;
-      });
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [phase]);
-
-  useEffect(() => {
-    if (phase === "ending") {
-      const t = setTimeout(() => {
-        setCycle((c) => c + 1);
-        setPanelIdx(0);
-        setPhase("playing");
-      }, 7000); // 5s ending + 2s pause
-      return () => clearTimeout(t);
-    }
-  }, [phase]);
-
-  const current = panels[panelIdx];
-  const dateStr = useMemo(() => {
-    const d = new Date();
-    const days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-    const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-    return `${days[d.getDay()]} · ${d.getDate()} ${months[d.getMonth()]}`;
-  }, []);
-
   return (
-    <div ref={containerRef} data-scene-lock={cycle < 1 ? "live" : undefined}
-      className="h-full w-full overflow-hidden relative flex flex-col select-none"
-      style={{ background: "var(--substrate)", perspective: "1000px", WebkitTapHighlightColor: "transparent" }}>
+    <div className="h-full w-full overflow-hidden relative flex flex-col select-none bg-cool-ambient"
+      style={{ WebkitTapHighlightColor: "transparent" }}>
+      {/* Ambient orbs */}
+      <div className="ambient-orb" style={{ width: "min(50vw,500px)", height: "min(50vw,500px)", top: "-15%", right: "-10%", background: "var(--active)", filter: "blur(80px)", opacity: "var(--orb-opacity, 0.08)" }} />
+      <div className="ambient-orb" style={{ width: "min(35vw,350px)", height: "min(35vw,350px)", bottom: "-10%", left: "-5%", background: "var(--active)", filter: "blur(70px)", opacity: "var(--orb-opacity, 0.06)" }} />
+
       <Ecosystem />
 
-      {/* Clock */}
-      <div className="shrink-0 text-center pt-[clamp(10px,2.5vh,22px)] relative z-10">
-        <motion.div className="text-[clamp(40px,10vw,96px)] font-light tracking-[0.08em] tabular-nums leading-none"
-          style={{ color: "var(--measure)", fontFamily: "ui-monospace, monospace" }}
-          initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
-          08:01
-        </motion.div>
-        <div className="text-[clamp(9px,1.5vw,12px)] font-mono mt-0.5 tracking-wider" style={{ color: "var(--measure-dim)" }}>
-          {dateStr}
-        </div>
+      {/* Content */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 lg:px-6 relative z-10 min-h-0">
+        <div className="w-full max-w-3xl flex flex-col items-center gap-6">
+
+          {/* Title */}
+          <motion.div className="text-center"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
+            <h2 className="text-[clamp(22px,4vw,40px)] font-light tracking-tight" style={{ color: "var(--measure)" }}>
+              Cómo trabajamos
+            </h2>
+            <p className="text-[clamp(12px,1.4vw,15px)] font-light mt-1" style={{ color: "var(--measure-dim)" }}>
+              De la idea al sistema funcionando · sin complicaciones
+            </p>
+          </motion.div>
+
+          {/* Steps */}
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {steps.map((step, i) => (
+              <StepCard key={step.num} step={step} idx={i} />
+            ))}
+          </div>
       </div>
 
-      {/* Panel */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 relative z-10 min-h-0">
-        <div className="w-full flex flex-col items-center" style={{ perspective: "800px" }}>
-          <AnimatePresence mode="wait">
-            {phase === "playing" ? (
-              <motion.div key={current.key} className="w-full"
-                initial={{ opacity: 0, rotateX: 4, y: 20 }}
-                animate={{ opacity: 1, rotateX: 0, y: 0 }}
-                exit={{ opacity: 0, rotateX: -4, y: -20 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
-                <current.component />
-              </motion.div>
-            ) : (
-              <motion.div key="ending" className="w-full flex justify-center"
-                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
-                <Ending />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Panel label */}
-        <AnimatePresence mode="wait">
-          {phase === "playing" && (
-            <motion.div className="mt-3 text-center"
-              key={current.key}
-              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.3 }}>
-              <span className="text-[clamp(9px,1.5vw,12px)] font-medium" style={{ color: "var(--measure-secondary)" }}>
-                {current.label}
-              </span>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      {/* Typewriter */}
       </div>
 
+      {/* Typewriter */}
+      <Typewriter />
     </div>
   );
 }

@@ -19,14 +19,28 @@ export function SceneIdea() {
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col items-center text-center max-w-xl">
 
-        <motion.span
+        <motion.img src="/logo.png" alt="TOALESCO"
+          className="w-[clamp(72px,8vw,96px)] h-auto mb-4"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[clamp(11px,1.6vw,14px)] font-mono tracking-[0.3em] mb-6"
-          style={{ color: "var(--active)" }}>
-          TOALESCO
-        </motion.span>
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} />
+
+          <motion.span
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-[clamp(18px,3.5vw,24px)] font-mono tracking-[0.3em] mb-2"
+            style={{ color: "var(--active)" }}>
+            TOALESCO
+          </motion.span>
+          <motion.p
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-[clamp(11px,1.4vw,14px)] font-light mb-6 tracking-wide"
+            style={{ color: "var(--measure-secondary)" }}>
+            Herramientas digitales para emprendedores
+          </motion.p>
 
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -53,6 +67,25 @@ export function SceneIdea() {
             </motion.p>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center gap-1.5 mb-6">
+          <span className="text-[clamp(11px,1.3vw,13px)] inline-flex items-center gap-1" style={{ color: "var(--measure-secondary)" }}>
+            <span className="text-[8px]" style={{ color: "var(--active)", opacity: 0.6 }}>▶</span>
+            Para dueños de negocio que no saben de tecnología
+          </span>
+          <span className="text-[clamp(11px,1.3vw,13px)] inline-flex items-center gap-1" style={{ color: "var(--measure-secondary)" }}>
+            <span className="text-[8px]" style={{ color: "var(--active)", opacity: 0.6 }}>▶</span>
+            Soporte directo de quien construye tu sistema
+          </span>
+          <span className="text-[clamp(11px,1.3vw,13px)] inline-flex items-center gap-1" style={{ color: "var(--measure-secondary)" }}>
+            <span className="text-[8px]" style={{ color: "var(--active)", opacity: 0.6 }}>▶</span>
+            Hablamos tu idioma, no código
+          </span>
+        </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 12 }}

@@ -24,6 +24,8 @@
   --pb-module: rgba(255,255,255,0.85);
   --pb-text: #111827;
   --pb-glow: rgba(232,164,71,0.15);
+  --eco-opacity: 0.2;
+  --orb-opacity: 0.12;
 }
 
 [data-theme="dark"] {
@@ -39,6 +41,8 @@
   --pb-module: rgba(18,24,38,0.85);
   --pb-text: #D6DAE2;
   --pb-glow: rgba(74,158,255,0.15);
+  --eco-opacity: 0.08;
+  --orb-opacity: 0.06;
 }
 
 html {
@@ -48,6 +52,9 @@ html {
   font-feature-settings: "cv02","cv03","cv04";
   transition: background 0.4s ease, color 0.4s ease;
 }
+
+/* Prevent SSR flash — JS unhides after loading */
+#exp-container { opacity: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -137,6 +144,8 @@ html {
 /* Dash move (EnergyLines) */
 @keyframes a-dash { 100% { stroke-dashoffset:-36 } }
 .a-dash { animation:a-dash 1.2s linear infinite; stroke-dasharray:4 14 }
+@keyframes a-dash-fast { 100% { stroke-dashoffset:-36 } }
+.a-dash-fast { animation:a-dash-fast 0.4s linear infinite; stroke-dasharray:6 10 }
 
 /* Ecosystem node pulse */
 @keyframes a-pulse-node { 0%,100% { opacity:0.1 } 50% { opacity:0.35 } }
@@ -162,6 +171,64 @@ html {
 @keyframes a-scale-pulse { 0%,100% { transform:scale(1) } 50% { transform:scale(1.1) } }
 .a-scale-pulse { animation:a-scale-pulse 3s ease-in-out infinite }
 
+/* ─── Light-mode ambient effects ─── */
+
+/* Subtle dot-grid pattern overlay */
+.bg-dots {
+  background-image: radial-gradient(circle, var(--measure-dim) 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+}
+
+/* Ambient radial glow for light sections */
+.bg-ambient-glow {
+  background: radial-gradient(ellipse at 25% 30%, color-mix(in srgb, var(--pb-energy) 6%, transparent) 0%, transparent 60%),
+              radial-gradient(ellipse at 75% 70%, color-mix(in srgb, var(--pb-solution) 5%, transparent) 0%, transparent 60%),
+              var(--pb-bg);
+}
+
+/* SceneSlowdown ambient (warm) */
+.bg-warm-ambient {
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, color-mix(in srgb, var(--active) 8%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, color-mix(in srgb, var(--active) 5%, transparent) 0%, transparent 60%),
+    var(--substrate);
+}
+
+/* SceneLiveSystem ambient */
+.bg-cool-ambient {
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 20%, color-mix(in srgb, var(--active) 7%, transparent) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 70% 70%, color-mix(in srgb, var(--active) 4%, transparent) 0%, transparent 50%),
+    var(--substrate);
+}
+
+/* Floating ambient orbs */
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+  opacity: 0.15;
+}
+.ambient-orb-1 {
+  width: min(40vw, 400px); height: min(40vw, 400px);
+  top: -10%; right: -10%;
+  background: var(--pb-energy);
+}
+.ambient-orb-2 {
+  width: min(30vw, 300px); height: min(30vw, 300px);
+  bottom: -5%; left: -5%;
+  background: var(--pb-solution);
+}
+[data-theme="dark"] .ambient-orb { opacity: 0.08; }
+
+/* Swipe hint animation */
+@keyframes swipe-hint {
+  0%, 100% { transform: translateX(0); opacity: 0.3; }
+  50% { transform: translateX(8px); opacity: 0.7; }
+}
+.a-swipe-hint { animation: swipe-hint 1.8s ease-in-out infinite; }
+
 /* Pop in (stock quantity change) */
 @keyframes a-pop-in { 0% { transform:scale(1.2) } 100% { transform:scale(1) } }
 .a-pop-in { animation:a-pop-in 0.15s ease-out }
@@ -169,3 +236,14 @@ html {
 /* Bar grow (stock bar change) */
 @keyframes a-bar-grow { 0% { width:0% } 100% { width:var(--w) } }
 .a-bar-grow { animation:a-bar-grow 0.4s ease-out }
+
+/* Mission ticker (desktop: vertical scroll) */
+@keyframes ticker-up {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+.a-ticker { animation: ticker-up 60s linear infinite; }
+
+
+
+

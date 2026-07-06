@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // ─── DATA ───
 
-type ProblemId = "instagram" | "excel" | "inventory" | "whatsapp" | "tasks" | "reports";
+type ProblemId = "instagram" | "excel" | "inventory" | "whatsapp" | "tasks" | "reports" | "tickets";
 export type { ProblemId };
 
 interface Problem {
@@ -14,6 +14,7 @@ interface Problem {
   title: string;
   before: string[];
   after: string[];
+  stat: string;
 }
 
 const problems: Problem[] = [
@@ -23,6 +24,7 @@ const problems: Problem[] = [
     title: "Clientes que se pierden en redes",
     before: ["Publicaciones sin rumbo", "Respuestas manuales", "Leads que se enfrían", "Sin seguimiento"],
     after: ["Landing Page", "Formulario Inteligente", "CRM Automatizado", "Más clientes"],
+    stat: "70%",
   },
   {
     id: "excel",
@@ -30,6 +32,7 @@ const problems: Problem[] = [
     title: "El caos de las planillas",
     before: ["Fórmulas rotas", "Datos duplicados", "Versiones sin control", "Errores humanos"],
     after: ["Sistema Web", "Dashboard en vivo", "Alertas automáticas", "Datos en tiempo real"],
+    stat: "3x",
   },
   {
     id: "inventory",
@@ -37,6 +40,7 @@ const problems: Problem[] = [
     title: "Stock que no ves",
     before: ["Stock ciego", "Productos perdidos", "Devoluciones sin registro", "Sin trazabilidad"],
     after: ["Control Digital", "Códigos y Tracking", "Alertas de stock", "Trazabilidad total"],
+    stat: "85%",
   },
   {
     id: "whatsapp",
@@ -44,6 +48,7 @@ const problems: Problem[] = [
     title: "Chats que no venden",
     before: ["Mensajes sueltos", "Clientes sin respuesta", "Ofertas perdidas", "Sin historial"],
     after: ["Chatbot Inteligente", "CRM integrado", "Respuestas automáticas", "Clientes felices"],
+    stat: "2.5x",
   },
   {
     id: "tasks",
@@ -51,6 +56,7 @@ const problems: Problem[] = [
     title: "Horas en lo mismo",
     before: ["Mismo trabajo cada día", "Horas perdidas", "Errores por fatiga", "Desgaste del equipo"],
     after: ["Automatización", "Workflow inteligente", "Cero errores", "Escalar sin esfuerzo"],
+    stat: "80%",
   },
   {
     id: "reports",
@@ -58,6 +64,15 @@ const problems: Problem[] = [
     title: "Decisiones a ciegas",
     before: ["Datos dispersos", "Informes manuales", "Decisiones lentas", "Sin visión clara"],
     after: ["Dashboard automático", "Reportes en vivo", "Decisiones rápidas", "Visión total del negocio"],
+    stat: "60%",
+  },
+  {
+    id: "tickets",
+    label: "Soporte",
+    title: "Soporte que no llega",
+    before: ["Correr tras el informático", "Llamadas sin respuesta", "Problemas sin registro", "Cero histórico"],
+    after: ["Ticket con foto y descripción", "Informático atiende directo", "Cierre con registro", "Estadísticas de incidencias"],
+    stat: "100%",
   },
 ];
 
@@ -170,6 +185,19 @@ function IconReports() {
   );
 }
 
+function IconTickets() {
+  return (
+    <svg viewBox="0 0 40 40" fill="none" className="w-8 h-8 lg:w-10 lg:h-10">
+      <rect x="8" y="8" width="24" height="24" rx="3" stroke="currentColor" strokeWidth="1.2" fill="currentColor" fillOpacity="0.06" />
+      <line x1="12" y1="15" x2="28" y2="15" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
+      <line x1="12" y1="20" x2="24" y2="20" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
+      <line x1="12" y1="25" x2="20" y2="25" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
+      <circle cx="28" cy="27" r="3" fill="currentColor" opacity="0.15" />
+      <circle cx="28" cy="27" r="1.2" fill="currentColor" />
+    </svg>
+  );
+}
+
 function MicroIcon({ type }: { type: ProblemId }) {
   switch (type) {
     case "instagram": return <IconInstagram />;
@@ -178,6 +206,7 @@ function MicroIcon({ type }: { type: ProblemId }) {
     case "whatsapp": return <IconWhatsApp />;
     case "tasks": return <IconTasks />;
     case "reports": return <IconReports />;
+    case "tickets": return <IconTickets />;
   }
 }
 
@@ -204,10 +233,10 @@ function ProblemNode({
       <motion.div
         className="relative flex items-center justify-center"
         style={{
-          width: "clamp(52px,5vw,72px)", height: "clamp(52px,5vw,72px)",
+          width: "clamp(60px,5vw,72px)", height: "clamp(60px,5vw,72px)",
           borderRadius: "50%",
           background: isActive
-            ? "var(--pb-energy)"
+            ? "var(--active)"
             : "color-mix(in srgb, var(--substrate) 96%, var(--measure))",
           border: isActive ? "none" : "1px solid var(--boundary)",
           color: isActive ? "#fff" : "var(--measure-dim)",
@@ -237,7 +266,7 @@ function ProblemNode({
         )}
       </motion.div>
       <span
-        className="text-[clamp(9px,1.8vw,13px)] font-medium leading-tight text-center"
+        className="text-[clamp(12px,1.8vw,13px)] font-medium leading-tight text-center"
         style={{
           color: isActive ? "var(--measure)" : "var(--measure-dim)",
           transition: "color 0.4s ease",
@@ -282,83 +311,158 @@ function EnergyLines({ gridRef, activeIndex }: { gridRef: React.RefObject<HTMLDi
     };
   }, [gridRef]);
 
-  // Build paths: connect nodes based on proximity (grid neighbors)
+  // Build paths: only from active node to grid neighbors
   const paths: { d: string; from: number; to: number }[] = [];
   if (nodePositions.length >= 6) {
-    const sorted = [...nodePositions];
-    // Determine if desktop (1 column) or mobile (3 columns) by checking x spread
-    const xs = sorted.map((p) => p.x);
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const isSingleColumn = maxX - minX < 100;
+    const p = nodePositions;
+    const ys = p.map((n) => n.y);
+    const isSingleRow = Math.max(...ys) - Math.min(...ys) < 40;
+    const neighbors: number[] = [];
 
-    if (isSingleColumn) {
-      // Vertical chain
-      for (let i = 0; i < sorted.length - 1; i++) {
-        const a = sorted[i];
-        const b = sorted[i + 1];
-        const mx = (a.x + b.x) / 2 + 8;
-        const my = (a.y + b.y) / 2;
-        paths.push({ d: `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`, from: i, to: i + 1 });
-      }
+    if (isSingleRow) {
+      if (activeIndex > 0) neighbors.push(activeIndex - 1);
+      if (activeIndex < p.length - 1) neighbors.push(activeIndex + 1);
     } else {
-      const cols = 3;
-      const rows = 2;
-      // Horizontal
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols - 1; col++) {
-          const i = row * cols + col;
-          const j = row * cols + col + 1;
-          if (i < sorted.length && j < sorted.length) {
-            const a = sorted[i];
-            const b = sorted[j];
-            const mx = (a.x + b.x) / 2;
-            const my = (a.y + b.y) / 2 - 4;
-            paths.push({ d: `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`, from: i, to: j });
-          }
-        }
-      }
-      // Vertical
-      for (let col = 0; col < cols; col++) {
-        const top = col;
-        const bottom = col + cols;
-        if (top < sorted.length && bottom < sorted.length) {
-          const a = sorted[top];
-          const b = sorted[bottom];
-          const mx = (a.x + b.x) / 2 + 4;
-          const my = (a.y + b.y) / 2;
-          paths.push({ d: `M${a.x},${a.y} Q${mx},${my} ${b.x},${b.y}`, from: top, to: bottom });
-        }
-      }
+      const col = activeIndex % 3;
+      const row = Math.floor(activeIndex / 3);
+      if (col > 0) neighbors.push(activeIndex - 1);
+      if (col < 2 && activeIndex + 1 < p.length) neighbors.push(activeIndex + 1);
+      if (row > 0) neighbors.push(activeIndex - 3);
+      if (row < 1) neighbors.push(activeIndex + 3);
     }
+
+    const a = p[activeIndex];
+    if (!a) return;
+    neighbors.forEach((n) => {
+      const b = p[n];
+      if (!b) return;
+      const mx = (a.x + b.x) / 2;
+      const my = (a.y + b.y) / 2;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const d = `M${a.x},${a.y} Q${mx + dy * 0.18},${my - dx * 0.18} ${b.x},${b.y}`;
+      paths.push({ d, from: activeIndex, to: n });
+    });
   }
 
   return (
     <svg className="absolute inset-0 w-full h-full pointer-events-none z-0"
       style={{ overflow: "visible" }}>
-      {paths.map((p, i) => {
-        const isConnected =
-          p.from === activeIndex || p.to === activeIndex;
-        return (
-          <g key={i}>
-            <path d={p.d} stroke="var(--boundary)" strokeWidth="1"
-              fill="none" opacity="0.35" />
-            <path d={p.d}
-              stroke={isConnected ? "var(--pb-energy)" : "var(--pb-solution)"}
-              strokeWidth="1.5" fill="none" strokeLinecap="round"
-              strokeDasharray="4 14"
-              opacity={isConnected ? 0.7 : 0.2}
-              className="a-dash"
-              style={{ animationDelay: `${i * 0.15}s` }} />
-            <path d={p.d}
-              stroke={isConnected ? "var(--pb-energy)" : "var(--pb-solution)"}
-              strokeWidth="5" fill="none" opacity="0.06"
-            />
-          </g>
-        );
-      })}
+      {paths.map((path, i) => (
+        <g key={i}>
+          <path d={path.d} stroke="var(--active)" strokeWidth="1.8" fill="none"
+            strokeLinecap="round" opacity="0.2" />
+          <path d={path.d} stroke="var(--active)" strokeWidth="1.8" fill="none"
+            strokeLinecap="round" strokeDasharray="6 10" opacity="0.6"
+            className="a-dash-fast" />
+          <path d={path.d} stroke="var(--active)" strokeWidth="6" fill="none"
+            opacity="0.04" />
+        </g>
+      ))}
     </svg>
   );
+}
+
+// ─── SOLUTION MOCKUP ───
+
+function SolutionMockup({ type }: { type: ProblemId }) {
+  const common = "w-full h-12 rounded-md overflow-hidden flex items-center justify-center";
+  switch (type) {
+    case "instagram":
+      return (
+        <div className={`${common}`} style={{ border: "1px solid var(--boundary)" }}>
+          <svg viewBox="0 0 80 24" className="w-full h-full p-1" fill="none">
+            <rect x="2" y="2" width="18" height="20" rx="2" stroke="var(--active)" strokeWidth="0.5" opacity="0.25" />
+            <rect x="6" y="4" width="10" height="6" rx="0.5" fill="var(--active)" opacity="0.06" />
+            <rect x="6" y="12" width="8" height="1.5" rx="0.3" fill="var(--active)" opacity="0.35" />
+            <rect x="6" y="14.5" width="6" height="1.5" rx="0.3" fill="var(--active)" opacity="0.18" />
+            <rect x="25" y="4" width="28" height="2" rx="0.5" fill="var(--active)" opacity="0.4" />
+            <rect x="25" y="8" width="50" height="1.5" rx="0.3" fill="var(--measure-dim)" opacity="0.12" />
+            <rect x="25" y="11" width="40" height="1.5" rx="0.3" fill="var(--measure-dim)" opacity="0.12" />
+            <rect x="25" y="14" width="45" height="1.5" rx="0.3" fill="var(--measure-dim)" opacity="0.12" />
+          </svg>
+        </div>
+      );
+    case "excel":
+      return (
+        <div className={`${common}`} style={{ border: "1px solid var(--boundary)" }}>
+          <svg viewBox="0 0 80 24" className="w-full h-full p-1" fill="none">
+            {[0, 1, 2].map((row) => (
+              <g key={row}>
+                {[0, 1, 2, 3].map((col) => (
+                  <rect key={col} x={4 + col * 18} y={3 + row * 7} width="15" height="5" rx="0.5"
+                    fill={col === 0 ? "var(--active)" : "transparent"}
+                    stroke="var(--measure-dim)" strokeWidth="0.4" opacity="0.25" />
+                ))}
+              </g>
+            ))}
+          </svg>
+        </div>
+      );
+    case "inventory":
+      return (
+        <div className={`${common}`} style={{ border: "1px solid var(--boundary)" }}>
+          <svg viewBox="0 0 80 24" className="w-full h-full p-1" fill="none">
+            {[0, 1, 2, 3].map((i) => (
+              <rect key={i} x={4 + i * 18} y={4 + (i % 2) * 4} width="14" height="10" rx="1"
+                stroke="var(--active)" strokeWidth="0.5" opacity={0.3 - i * 0.05} />
+            ))}
+          </svg>
+        </div>
+      );
+    case "whatsapp":
+      return (
+        <div className={`${common}`} style={{ border: "1px solid var(--boundary)" }}>
+          <svg viewBox="0 0 80 24" className="w-full h-full p-1" fill="none">
+            <rect x="4" y="10" width="26" height="10" rx="3" stroke="var(--active)" strokeWidth="0.5" opacity="0.35" />
+            <rect x="40" y="4" width="28" height="10" rx="3" stroke="var(--active)" strokeWidth="0.5" opacity="0.25" />
+            <rect x="8" y="13" width="14" height="1.5" rx="0.3" fill="var(--active)" opacity="0.3" />
+            <rect x="44" y="7" width="16" height="1.5" rx="0.3" fill="var(--active)" opacity="0.2" />
+          </svg>
+        </div>
+      );
+    case "tasks":
+      return (
+        <div className={`${common}`} style={{ border: "1px solid var(--boundary)" }}>
+          <svg viewBox="0 0 80 24" className="w-full h-full p-1" fill="none">
+            {[0, 1, 2].map((i) => (
+              <g key={i}>
+                <rect x={4} y={4 + i * 7} width="14" height="5" rx="1" stroke="var(--active)" strokeWidth="0.4" opacity="0.25" />
+                <path d={`M7 ${6.5 + i * 7} L9 ${8.5 + i * 7} L13 ${4.5 + i * 7}`} stroke="var(--active)" strokeWidth="0.7" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" />
+                <rect x={22} y={5 + i * 7} width={40 - i * 8} height="2" rx="0.5" fill="var(--measure-dim)" opacity="0.1" />
+              </g>
+            ))}
+          </svg>
+        </div>
+      );
+    case "reports":
+      return (
+        <div className={`${common}`} style={{ border: "1px solid var(--boundary)" }}>
+          <svg viewBox="0 0 80 24" className="w-full h-full p-1" fill="none">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <rect key={i} x={6 + i * 14} y={6 + (4 - i) * 2.5} width="10" height={(i + 1) * 2.5 + 2} rx="0.5"
+                fill="var(--active)" opacity={0.06 + i * 0.03}
+                stroke="var(--active)" strokeWidth="0.3" />
+            ))}
+          </svg>
+        </div>
+      );
+    case "tickets":
+      return (
+        <div className={`${common}`} style={{ border: "1px solid var(--boundary)" }}>
+          <svg viewBox="0 0 80 24" className="w-full h-full p-1" fill="none">
+            {[0, 1, 2].map((i) => (
+              <g key={i}>
+                <rect x={4} y={3 + i * 7} width="8" height="5" rx="1" stroke="var(--active)" strokeWidth="0.4" opacity="0.25" />
+                <rect x={14} y={3 + i * 7} width="40" height="5" rx="0.5" fill="var(--active)" opacity="0.04" stroke="var(--active)" strokeWidth="0.3" />
+                <circle cx={57} cy={5.5 + i * 7} r="2" fill="var(--active)" opacity="0.15" />
+                <circle cx={57} cy={5.5 + i * 7} r="0.8" fill="var(--active)" opacity="0.4" />
+              </g>
+            ))}
+          </svg>
+        </div>
+      );
+  }
 }
 
 // ─── TRANSFORMATION LIST ITEM ───
@@ -390,14 +494,14 @@ function TransformItem({
         style={{
           width: isSolution ? 5 : 4,
           height: isSolution ? 5 : 4,
-          background: isSolution ? "var(--pb-solution)" : "var(--measure-dim)",
+          background: isSolution ? "var(--active)" : "var(--measure-dim)",
         }}
       />
       <span
-        className="text-[clamp(10px,1.6vw,15px)]"
+        className="text-[clamp(14px,1.6vw,15px)]"
         style={{
-          color: isSolution ? "var(--pb-text)" : "var(--measure-secondary)",
-          fontWeight: isSolution ? 500 : 400,
+          color: isSolution ? "var(--measure)" : "var(--measure-secondary)",
+          fontWeight: isSolution ? 400 : 400,
         }}
       >
         {text}
@@ -411,70 +515,92 @@ function TransformItem({
 function TransformationPanel({ problem }: { problem: Problem }) {
   return (
     <div className="w-full flex flex-col min-h-0 gap-2">
-      <motion.h3
-        key={problem.id + "-t"}
-        className="text-[clamp(12px,2.2vw,20px)] font-semibold text-center"
+      <motion.h3 className="text-[clamp(15px,2.5vw,20px)] font-semibold text-center"
         style={{ color: "var(--pb-text)" }}
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      >
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}>
         {problem.title}
       </motion.h3>
-
-      <div className="flex gap-2.5 flex-1 min-h-0">
-        <div className="flex-1 rounded-xl p-[clamp(8px,1.5vw,18px)] flex flex-col gap-1.5"
-          style={{
-            background: "color-mix(in srgb, var(--pb-module) 50%, transparent)",
-            border: "1px solid var(--boundary)",
-          }}>
-          <span className="text-[clamp(7px,1.2vw,11px)] font-semibold uppercase tracking-wider"
+      <div className="flex flex-col gap-2 flex-1 min-h-0" style={{ perspective: "800px" }}>
+        {/* Header row */}
+        <div className="flex items-stretch gap-2.5 shrink-0">
+          <span className="flex-1 text-[clamp(10px,1.2vw,11px)] font-semibold uppercase tracking-wider text-left"
             style={{ color: "var(--measure-dim)" }}>
             Antes
           </span>
-          <AnimatePresence mode="popLayout">
-            <div className="flex flex-col gap-1">
-              {problem.before.map((item, i) => (
-                <TransformItem key={problem.id + "-b-" + i}
-                  idx={i} problemId={problem.id} side="before" text={item} isSolution={false} />
-              ))}
-            </div>
-          </AnimatePresence>
-        </div>
-
-        <div className="flex items-center justify-center shrink-0">
-          <motion.div
-            key={problem.id + "-a"}
-            className="w-6 h-6 flex items-center justify-center rounded-full text-[clamp(10px,1.3vw,16px)]"
-            style={{ background: "var(--pb-energy)", color: "#fff" }}
-            initial={{ scale: 0, rotate: -90 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-          >
-            →
-          </motion.div>
-        </div>
-
-        <div className="flex-1 rounded-xl p-[clamp(8px,1.5vw,18px)] flex flex-col gap-1.5"
-          style={{
-            background: "color-mix(in srgb, var(--pb-solution) 7%, transparent)",
-            border: "1px solid",
-            borderColor: "color-mix(in srgb, var(--pb-solution) 18%, transparent)",
-          }}>
-          <span className="text-[clamp(7px,1.2vw,11px)] font-semibold uppercase tracking-wider"
-            style={{ color: "var(--pb-solution)" }}>
+          <div className="shrink-0 w-5" />
+          <span className="flex-1 text-[clamp(10px,1.2vw,11px)] font-semibold uppercase tracking-wider text-right"
+            style={{ color: "var(--active)" }}>
             Después
           </span>
-          <AnimatePresence mode="popLayout">
-            <div className="flex flex-col gap-1">
-              {problem.after.map((item, i) => (
-                <TransformItem key={problem.id + "-a-" + i}
-                  idx={i} problemId={problem.id} side="after" text={item} isSolution={true} />
-              ))}
-            </div>
-          </AnimatePresence>
         </div>
+        <div className="flex items-stretch gap-2.5 flex-1 min-h-0">
+          <motion.div className="flex-1 rounded-xl p-[clamp(12px,1.5vw,18px)] flex flex-col gap-1.5"
+            style={{
+              background: "color-mix(in srgb, var(--pb-module) 50%, transparent)",
+              border: "1px solid var(--boundary)",
+            }}
+            initial={{ opacity: 0, rotateY: -6, x: -8 }}
+            animate={{ opacity: 1, rotateY: 0, x: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
+            {/* Stat */}
+            <motion.div className="text-[clamp(28px,4vw,44px)] font-light tabular-nums leading-none text-center mb-1"
+              style={{ color: "var(--measure-dim)" }}
+              initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}>
+              {problem.stat}
+              <span className="text-[clamp(10px,1.2vw,14px)] font-mono ml-1" style={{ color: "var(--measure-dim)" }}>menos</span>
+            </motion.div>
+            <AnimatePresence mode="popLayout">
+              <div className="flex flex-col gap-1.5">
+                {problem.before.map((item, i) => (
+                  <TransformItem key={problem.id + "-b-" + i}
+                    idx={i} problemId={problem.id} side="before" text={item} isSolution={false} />
+                ))}
+              </div>
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Arrow */}
+          <div className="flex items-center justify-center shrink-0">
+            <motion.div
+              key={problem.id + "-arr"}
+              className="w-6 h-6 flex items-center justify-center rounded-full text-[clamp(12px,1.1vw,15px)]"
+              style={{ background: "var(--active)", color: "#fff" }}
+              initial={{ scale: 0, rotate: -90 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
+            >
+              →
+            </motion.div>
+          </div>
+
+          <motion.div className="flex-1 rounded-xl p-[clamp(12px,1.5vw,18px)] flex flex-col gap-1.5 relative overflow-hidden"
+            style={{
+              background: "var(--substrate)",
+              border: "1px solid var(--boundary)",
+            }}
+            initial={{ opacity: 0, rotateY: 6, x: 8 }}
+            animate={{ opacity: 1, rotateY: 0, x: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
+            {/* Accent bar */}
+            <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: "var(--active)" }} />
+            <AnimatePresence mode="popLayout">
+              <div className="flex flex-col gap-1">
+                {problem.after.map((item, i) => (
+                  <TransformItem key={problem.id + "-a-" + i}
+                    idx={i} problemId={problem.id} side="after" text={item} isSolution={true} />
+                ))}
+              </div>
+            </AnimatePresence>
+          {/* Mockup */}
+          <div className="mt-2">
+            <SolutionMockup type={problem.id} />
+          </div>
+        </motion.div>
       </div>
+    </div>
     </div>
   );
 }
@@ -493,26 +619,28 @@ export function SceneSlowdown({
   const gridRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="h-full w-full flex flex-col overflow-hidden"
-      style={{ background: "var(--pb-bg)" }}>
+    <div className="h-full w-full flex flex-col overflow-hidden relative bg-warm-ambient">
+      <div className="ambient-orb ambient-orb-1" />
+      <div className="ambient-orb ambient-orb-2" />
+
       {/* Top: header + nodes */}
-      <div className="shrink-0 flex flex-col overflow-hidden">
-        <div className="shrink-0 text-center pt-[clamp(10px,2.5vh,24px)] pb-[clamp(4px,1vh,10px)] px-4 max-w-lg lg:max-w-xl mx-auto w-full">
-          <h2 className="text-[clamp(14px,2.8vw,28px)] font-semibold tracking-tight"
+      <div className="shrink-0 flex flex-col overflow-hidden relative z-10">
+        <div className="shrink-0 text-center pt-[clamp(20px,3vh,32px)] pb-[clamp(10px,1.5vh,16px)] px-4 max-w-2xl lg:max-w-3xl mx-auto w-full">
+          <h2 className="text-[clamp(20px,3vw,32px)] font-semibold tracking-tight"
             style={{ color: "var(--pb-text)" }}>
             ¿Qué está frenando tu negocio?
           </h2>
-          <p className="text-[clamp(8px,1.4vw,14px)] mt-0.5"
+          <p className="text-[clamp(12px,1.5vw,15px)] mt-1"
             style={{ color: "var(--measure-dim)" }}>
             Toca un problema para ver su solución
           </p>
         </div>
 
-        <div className="relative flex items-center justify-center px-4 pb-[clamp(6px,1.5vh,14px)]">
-          <div className="relative w-full max-w-sm lg:max-w-md">
+        <div className="relative flex items-center justify-center px-4 pb-[clamp(12px,2vh,20px)]">
+          <div className="relative w-full max-w-lg lg:max-w-2xl">
             <EnergyLines gridRef={gridRef} activeIndex={activeIndex} />
             <div ref={gridRef}
-              className="grid grid-cols-3 gap-y-[clamp(10px,2vh,18px)] w-full relative z-10">
+              className="grid grid-cols-3 lg:flex lg:justify-between gap-y-[clamp(14px,2.5vh,24px)] w-full relative z-10">
               {problems.map((p, i) => (
                 <div key={p.id} className="flex justify-center">
                   <ProblemNode
@@ -529,7 +657,7 @@ export function SceneSlowdown({
       </div>
 
       {/* Bottom: transformation panel */}
-      <div className="flex-1 min-h-0 px-4 pb-[clamp(8px,2vh,16px)] max-w-lg lg:max-w-xl mx-auto w-full">
+      <div className="flex-1 min-h-0 px-4 pb-[clamp(12px,2vh,16px)] max-w-2xl lg:max-w-3xl mx-auto w-full relative z-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeProblemId}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { SceneIdea } from "./SceneIdea";
 import { SceneSlowdown } from "./SceneSlowdown";
 import type { ProblemId } from "./SceneSlowdown";
@@ -16,9 +16,10 @@ const totalScenes = 5;
 export function Experience() {
   const [loaded, setLoaded] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
-  const [active, setActive] = useState(0);
+  const [[active, direction], setPage] = useState([0, 0]);
   const [activeProblem, setActiveProblem] = useState<ProblemId>("instagram");
   const ticking = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -31,14 +32,14 @@ export function Experience() {
     const next = Math.max(0, Math.min(i, totalScenes - 1));
     if (next === active) return;
     ticking.current = true;
-    setActive(next);
+    setPage([next, next > active ? 1 : -1]);
     setTimeout(() => { ticking.current = false; }, 500);
   }, [active]);
 
   useEffect(() => {
-    const el = document.getElementById("exp-container");
+    const el = containerRef.current;
     if (!el) return;
-    let touchY = 0;
+    let touchX = 0;
     let wheelY = 0;
 
     const isLocked = (target: EventTarget | null) =>
@@ -56,12 +57,12 @@ export function Experience() {
 
     const onTouchStart = (e: TouchEvent) => {
       if (isLocked(e.target)) return;
-      touchY = e.touches[0].clientY;
+      touchX = e.touches[0].clientX;
     };
     const onTouchEnd = (e: TouchEvent) => {
       if (isLocked(e.target)) return;
-      const dy = e.changedTouches[0].clientY - touchY;
-      if (Math.abs(dy) > 40) goTo(active + (dy < 0 ? 1 : -1));
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) goTo(active + (dx < 0 ? 1 : -1));
     };
 
     el.addEventListener("wheel", onWheel, { passive: false });
@@ -88,66 +89,52 @@ export function Experience() {
     <>
       {!loaded && <LoadingScreen onDone={onLoadDone} />}
 
-      <div id="exp-container" className="h-dvh overflow-hidden relative"
+      <div ref={containerRef} id="exp-container" className="h-dvh overflow-hidden relative"
         style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.5s ease" }}>
 
-        {scenes.map((_, i) => {
-          const isActive = i === active;
-          const isPast = i < active;
-          const dist = active - i;
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div key={active} className="absolute inset-0 overflow-hidden"
+            custom={direction}
+            variants={{
+              enter: (dir: number) => ({ x: dir * 280, opacity: 0, scale: 0.85 }),
+              center: { x: 0, opacity: 1, scale: 1 },
+              exit: (dir: number) => ({ x: dir * -200, opacity: 0, scale: 0.9 }),
+            }}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
+            <div className="h-full w-full pb-20">
+              {active === 0 && <SceneIdea />}
+              {active === 1 && <SceneSlowdown activeProblemId={activeProblem} onProblemSelect={setActiveProblem} />}
+              {active === 2 && <SceneLiveSystem />}
+              {active === 3 && <SceneProyectos />}
+              {active === 4 && <SceneContacto />}
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
-          return (
-            <motion.div
-              key={i}
-              className="absolute inset-0 overflow-hidden"
-              style={{
-                zIndex: isActive ? 10 : (isPast ? 10 - dist : 0),
-                pointerEvents: isActive ? "auto" : "none",
-                borderRadius: isPast || isActive ? 14 : 0,
-              }}
-              initial={false}
-              animate={{
-                scale: isActive ? 0.94 : isPast ? 0.94 - (dist * 0.04) : 0.9,
-                opacity: isActive ? 1 : isPast ? Math.max(0.45 - (dist * 0.15), 0.08) : 0,
-                x: isPast ? dist * 12 : 0,
-                y: isPast ? dist * 16 : 0,
-              }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
-                <div className="h-full w-full" style={{
-                  boxShadow: isActive ? "0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)" : "none",
-                  borderRadius: 14,
-                }}>
-                  {i === 0 && <SceneIdea />}
-                  {i === 1 && <SceneSlowdown activeProblemId={activeProblem} onProblemSelect={setActiveProblem} />}
-                  {i === 2 && <SceneLiveSystem />}
-                  {i === 3 && <SceneProyectos />}
-                  {i === 4 && <SceneContacto />}
-                </div>
-            </motion.div>
-          );
-        })}
-
-        <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 px-4 py-2 rounded-full"
+        <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-3 py-1.5 rounded-full"
           style={{
-            background: "color-mix(in srgb, var(--substrate) 75%, transparent)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
+            background: "color-mix(in srgb, var(--substrate) 60%, transparent)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
             border: "1px solid var(--boundary)",
           }}>
           {scenes.map((label, i) => (
             <button key={i} onClick={() => goTo(i)}
-              className="rounded-full transition-all duration-500 relative before:absolute before:inset-[-18px] before:content-['']"
+              className="rounded-full transition-all duration-500"
               style={{
-                width: i === active ? 24 : 7,
-                height: 7,
+                width: i === active ? 20 : 5,
+                height: 5,
                 background: i === active ? "var(--active)" : "var(--measure-dim)",
-                opacity: i === active ? 1 : 0.3,
+                opacity: i === active ? 1 : 0.25,
               }}
               aria-label={label} />
           ))}
-          <div className="w-[1px] h-6 mx-1" style={{ background: "var(--boundary)" }} />
+          <div className="w-px h-4 mx-0.5" style={{ background: "var(--boundary)" }} />
           <button onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
-            className="text-[clamp(10px,1.5vw,13px)] select-none min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="text-sm select-none w-7 h-7 flex items-center justify-center"
             style={{ color: "var(--measure-dim)" }}>
             {theme === "light" ? "☀" : "☾"}
           </button>
