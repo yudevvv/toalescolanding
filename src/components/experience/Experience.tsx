@@ -3,12 +3,14 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SceneIdea } from "./SceneIdea";
-import { SceneSlowdown } from "./SceneSlowdown";
+import dynamic from "next/dynamic";
 import type { ProblemId } from "./SceneSlowdown";
-import { SceneLiveSystem } from "./SceneLiveSystem";
-import { SceneProyectos } from "./SceneProyectos";
-import { SceneContacto } from "./SceneContacto";
 import { LoadingScreen } from "./LoadingScreen";
+
+const SceneSlowdown = dynamic(() => import("./SceneSlowdown").then(m => ({ default: m.SceneSlowdown })), { ssr: false });
+const SceneLiveSystem = dynamic(() => import("./SceneLiveSystem").then(m => ({ default: m.SceneLiveSystem })), { ssr: false });
+const SceneProyectos = dynamic(() => import("./SceneProyectos").then(m => ({ default: m.SceneProyectos })), { ssr: false });
+const SceneContacto = dynamic(() => import("./SceneContacto").then(m => ({ default: m.SceneContacto })), { ssr: false });
 
 const scenes = ["Una idea.", "¿Qué está frenando tu negocio?", "Así funciona", "Proyectos", "Contacto"];
 const totalScenes = 5;

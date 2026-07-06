@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const transforms = [
   ["Instagram", "Tu propia plataforma."],
@@ -19,11 +20,13 @@ export function SceneIdea() {
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         className="flex flex-col items-center text-center max-w-xl">
 
-        <motion.img src="/logo.png" alt="TOALESCO" width="96" height="96"
-          className="w-[clamp(72px,8vw,96px)] h-auto mb-4"
+        <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} />
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
+          <Image src="/logo.png" alt="TOALESCO" width="96" height="96"
+            className="w-[clamp(72px,8vw,96px)] h-auto mb-4" priority />
+        </motion.div>
 
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
