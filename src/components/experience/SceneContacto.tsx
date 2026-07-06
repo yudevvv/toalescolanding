@@ -31,7 +31,7 @@ export function SceneContacto() {
         <motion.div className="mb-6"
           animate={{ scale: [1, 1.04, 1] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
-          <img src="/logo.png" alt="TOALESCO"
+          <img src="/logo.png" alt="TOALESCO" width="72" height="72"
             className="w-[clamp(48px,6vw,72px)] h-auto" />
         </motion.div>
 
