@@ -38,7 +38,7 @@ export function LoadingScreen({ onDone }: Props) {
 
   return (
     <div className={"fixed inset-0 z-[9999] flex items-center justify-center" + (exiting ? " a-fo" : "")}
-      style={{ background: exiting ? "var(--substrate)" : "var(--substrate)", animation: exiting ? "fade-out 0.4s ease both" : undefined }}>
+      style={{ background: exiting ? "var(--substrate)" : "var(--substrate)", animation: exiting ? "fading-out 0.4s ease both" : undefined }}>
       <div className="flex items-center gap-[0.15em]">
         {letters.map((letter, i) => (
           <span key={`${letter}-${i}`}

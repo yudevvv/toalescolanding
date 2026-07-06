@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 // ─── DATA ───
 
@@ -230,7 +229,7 @@ function ProblemNode({
       className="flex flex-col items-center gap-1.5 cursor-pointer select-none touch-manipulation"
       style={{ WebkitTapHighlightColor: "transparent" }}
     >
-      <motion.div
+      <div
         className="relative flex items-center justify-center"
         style={{
           width: "clamp(60px,5vw,72px)", height: "clamp(60px,5vw,72px)",
@@ -240,31 +239,21 @@ function ProblemNode({
             : "color-mix(in srgb, var(--substrate) 96%, var(--measure))",
           border: isActive ? "none" : "1px solid var(--boundary)",
           color: isActive ? "#fff" : "var(--measure-dim)",
-          transition: "background 0.4s ease, color 0.4s ease, border 0.4s ease",
+          transition: "all 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+          transform: isActive ? "scale(1.08)" : "scale(1)",
         }}
-        animate={{
-          scale: isActive ? 1.08 : 1,
-        }}
-        whileHover={{ scale: 1.04 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.transform = "scale(1.04)"; }}
+        onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.transform = "scale(1)"; }}
+        onMouseDown={(e) => { e.currentTarget.style.transform = "scale(0.95)"; }}
+        onMouseUp={(e) => { e.currentTarget.style.transform = isActive ? "scale(1.08)" : "scale(1.04)"; }}
       >
         <MicroIcon type={problem.id} />
         {isActive && (
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            initial={false}
-            animate={{
-              boxShadow: [
-                "0 0 8px var(--pb-glow)",
-                "0 0 22px var(--pb-glow)",
-                "0 0 8px var(--pb-glow)",
-              ],
-            }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          <div
+            className="absolute inset-0 rounded-full a-glow"
           />
         )}
-      </motion.div>
+      </div>
       <span
         className="text-[clamp(12px,1.8vw,13px)] font-medium leading-tight text-center"
         style={{
@@ -481,13 +470,9 @@ function TransformItem({
   isSolution: boolean;
 }) {
   return (
-    <motion.div
-      key={problemId + "-" + side + "-" + idx}
-      className="flex items-center gap-1.5"
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -6 }}
-      transition={{ duration: 0.25, delay: idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
+    <div
+      className="flex items-center gap-1.5 a-fu"
+      style={{ animationDelay: `${idx * 0.04}s` }}
     >
       <span
         className="shrink-0 rounded-full"
@@ -506,7 +491,7 @@ function TransformItem({
       >
         {text}
       </span>
-    </motion.div>
+    </div>
   );
 }
 
@@ -515,13 +500,10 @@ function TransformItem({
 function TransformationPanel({ problem }: { problem: Problem }) {
   return (
     <div className="w-full flex flex-col min-h-0 gap-2">
-      <motion.h3 className="text-[clamp(15px,2.5vw,20px)] font-semibold text-center"
-        style={{ color: "var(--pb-text)" }}
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}>
+      <h3 className="text-[clamp(15px,2.5vw,20px)] font-semibold text-center a-fu"
+        style={{ color: "var(--pb-text)" }}>
         {problem.title}
-      </motion.h3>
+      </h3>
       <div className="flex flex-col gap-2 flex-1 min-h-0" style={{ perspective: "800px" }}>
         {/* Header row */}
         <div className="flex items-stretch gap-2.5 shrink-0">
@@ -536,69 +518,53 @@ function TransformationPanel({ problem }: { problem: Problem }) {
           </span>
         </div>
         <div className="flex items-stretch gap-2.5 flex-1 min-h-0">
-          <motion.div className="flex-1 rounded-xl p-[clamp(12px,1.5vw,18px)] flex flex-col gap-1.5"
+          <div className="flex-1 rounded-xl p-[clamp(12px,1.5vw,18px)] flex flex-col gap-1.5 a-card-left"
             style={{
               background: "color-mix(in srgb, var(--pb-module) 50%, transparent)",
               border: "1px solid var(--boundary)",
-            }}
-            initial={{ opacity: 0, rotateY: -6, x: -8 }}
-            animate={{ opacity: 1, rotateY: 0, x: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
+            }}>
             {/* Stat */}
-            <motion.div className="text-[clamp(28px,4vw,44px)] font-light tabular-nums leading-none text-center mb-1"
-              style={{ color: "var(--measure-dim)" }}
-              initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}>
+            <div className="text-[clamp(28px,4vw,44px)] font-light tabular-nums leading-none text-center mb-1 a-stat-bounce"
+              style={{ color: "var(--measure-dim)" }}>
               {problem.stat}
               <span className="text-[clamp(10px,1.2vw,14px)] font-mono ml-1" style={{ color: "var(--measure-dim)" }}>menos</span>
-            </motion.div>
-            <AnimatePresence mode="popLayout">
-              <div className="flex flex-col gap-1.5">
-                {problem.before.map((item, i) => (
-                  <TransformItem key={problem.id + "-b-" + i}
-                    idx={i} problemId={problem.id} side="before" text={item} isSolution={false} />
-                ))}
-              </div>
-            </AnimatePresence>
-          </motion.div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              {problem.before.map((item, i) => (
+                <TransformItem key={problem.id + "-b-" + i}
+                  idx={i} problemId={problem.id} side="before" text={item} isSolution={false} />
+              ))}
+            </div>
+          </div>
 
           {/* Arrow */}
           <div className="flex items-center justify-center shrink-0">
-            <motion.div
-              key={problem.id + "-arr"}
-              className="w-6 h-6 flex items-center justify-center rounded-full text-[clamp(12px,1.1vw,15px)]"
+            <div
+              className="w-6 h-6 flex items-center justify-center rounded-full text-[clamp(12px,1.1vw,15px)] a-rotate-in"
               style={{ background: "var(--active)", color: "#fff" }}
-              initial={{ scale: 0, rotate: -90 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
             >
               →
-            </motion.div>
+            </div>
           </div>
 
-          <motion.div className="flex-1 rounded-xl p-[clamp(12px,1.5vw,18px)] flex flex-col gap-1.5 relative overflow-hidden"
+          <div className="flex-1 rounded-xl p-[clamp(12px,1.5vw,18px)] flex flex-col gap-1.5 relative overflow-hidden a-card-right"
             style={{
               background: "var(--substrate)",
               border: "1px solid var(--boundary)",
-            }}
-            initial={{ opacity: 0, rotateY: 6, x: 8 }}
-            animate={{ opacity: 1, rotateY: 0, x: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
+            }}>
             {/* Accent bar */}
             <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: "var(--active)" }} />
-            <AnimatePresence mode="popLayout">
-              <div className="flex flex-col gap-1">
-                {problem.after.map((item, i) => (
-                  <TransformItem key={problem.id + "-a-" + i}
-                    idx={i} problemId={problem.id} side="after" text={item} isSolution={true} />
-                ))}
-              </div>
-            </AnimatePresence>
+            <div className="flex flex-col gap-1">
+              {problem.after.map((item, i) => (
+                <TransformItem key={problem.id + "-a-" + i}
+                  idx={i} problemId={problem.id} side="after" text={item} isSolution={true} />
+              ))}
+            </div>
           {/* Mockup */}
           <div className="mt-2">
             <SolutionMockup type={problem.id} />
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
     </div>
@@ -658,18 +624,9 @@ export function SceneSlowdown({
 
       {/* Bottom: transformation panel */}
       <div className="flex-1 min-h-0 px-4 pb-[clamp(12px,2vh,16px)] max-w-2xl lg:max-w-3xl mx-auto w-full relative z-10">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeProblemId}
-            className="h-full w-full flex flex-col"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -14 }}
-            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <TransformationPanel problem={activeProblem} />
-          </motion.div>
-        </AnimatePresence>
+        <div key={activeProblemId} className="h-full w-full flex flex-col a-panel-content">
+          <TransformationPanel problem={activeProblem} />
+        </div>
       </div>
     </div>
   );

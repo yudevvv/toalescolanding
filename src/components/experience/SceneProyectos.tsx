@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 // ─── PROJECT DATA ───
 
@@ -140,21 +139,20 @@ function HowItWorksSection({ steps }: { steps: string | string[] }) {
         style={{ fontFamily: "ui-monospace,monospace", color: "var(--measure-dim)" }}>
         CÓMO FUNCIONA
       </p>
-      <div className="flex flex-col gap-2">
-        {items.map((step, i) => (
-          <motion.div key={i} className="flex items-start gap-2.5"
-            initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.08, duration: 0.3 }}>
-            <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-medium"
-              style={{ background: "var(--active-dim)", color: "var(--active)" }}>
-              {i + 1}
-            </span>
-            <span className="text-[clamp(13px,2vw,16px)] font-light leading-relaxed"
-              style={{ color: "var(--measure)" }}>
-              {step}
-            </span>
-          </motion.div>
-        ))}
+          <div className="flex flex-col gap-2">
+            {items.map((step, i) => (
+              <div key={i} className="flex items-start gap-2.5 a-step-item"
+                style={{ animationDelay: `${i * 0.08}s` }}>
+                <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-medium"
+                  style={{ background: "var(--active-dim)", color: "var(--active)" }}>
+                  {i + 1}
+                </span>
+                <span className="text-[clamp(13px,2vw,16px)] font-light leading-relaxed"
+                  style={{ color: "var(--measure)" }}>
+                  {step}
+                </span>
+              </div>
+            ))}
       </div>
     </div>
   );
@@ -164,7 +162,7 @@ function HowItWorksSection({ steps }: { steps: string | string[] }) {
 
 export function SceneProyectos() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [origin, setOrigin] = useState<{ top: number; height: number } | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -176,15 +174,18 @@ export function SceneProyectos() {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  const openCase = (id: string, e: React.MouseEvent) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    setOrigin({ top: rect.top, height: rect.height });
+  const openCase = (id: string) => {
+    setIsClosing(false);
     setExpandedId(id);
   };
 
-  const closeCase = () => {
-    setExpandedId(null);
-  };
+  const closeCase = useCallback(() => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setExpandedId(null);
+      setIsClosing(false);
+    }, 300);
+  }, []);
 
   return (
     <section className="h-dvh overflow-hidden relative" style={{ background: "var(--substrate)" }}>
@@ -204,40 +205,33 @@ export function SceneProyectos() {
         ref={listRef}
         className="h-full overflow-y-auto px-6 py-12 transition-all duration-400 ease-out relative z-[1]"
         style={{
-          width: isDesktop && expandedId ? "35%" : "100%",
-          borderRight: isDesktop && expandedId ? "1px solid var(--boundary)" : "none",
+          width: isDesktop && expandedId && !isClosing ? "35%" : "100%",
+          borderRight: isDesktop && expandedId && !isClosing ? "1px solid var(--boundary)" : "none",
         }}>
-        <div className={isDesktop && expandedId ? "" : "max-w-2xl mx-auto"}>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-[clamp(9px,1.3vw,11px)] tracking-[0.2em] mb-1"
+        <div className={isDesktop && expandedId && !isClosing ? "" : "max-w-2xl mx-auto"}>
+          <p className="text-[clamp(9px,1.3vw,11px)] tracking-[0.2em] mb-1 a-fu"
             style={{ fontFamily: "ui-monospace,monospace", color: "var(--active)" }}>
             PROYECTOS
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
-            className="text-[clamp(20px,4vw,36px)] font-light tracking-tight mb-6"
+          </p>
+          <p className="text-[clamp(20px,4vw,36px)] font-light tracking-tight mb-6 a-fu a-d1"
             style={{ color: "var(--measure)" }}>
             Lo que <span style={{ color: "var(--active)" }}>hemos construido</span>
-          </motion.p>
+          </p>
 
           <div className="space-y-2 relative">
             {projects.map((p, idx) => (
-              <motion.div
+              <div
                 key={p.id}
-                onClick={(e) => openCase(p.id, e)}
-                className="rounded-[10px] cursor-pointer select-none px-4 py-3.5 flex items-start gap-3 relative overflow-hidden group"
+                onClick={() => openCase(p.id)}
+                className="rounded-[10px] cursor-pointer select-none px-4 py-3.5 flex items-start gap-3 relative overflow-hidden group a-card-item"
                 style={{
                   border: "1px solid var(--boundary)",
                   background: "var(--substrate)",
+                  animationDelay: `${idx * 0.1}s`,
+                  transition: "scale 0.2s cubic-bezier(0.16,1,0.3,1), border-color 0.2s cubic-bezier(0.16,1,0.3,1)",
                 }}
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ scale: 1.015, borderColor: "var(--active)" }}>
+                onMouseEnter={(e) => { e.currentTarget.style.scale = "1.015"; e.currentTarget.style.borderColor = "var(--active)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.scale = "1"; e.currentTarget.style.borderColor = "var(--boundary)"; }}>
                 {/* Accent dot */}
                 <div className="shrink-0 w-1 self-stretch rounded-full" style={{ background: "var(--active)", opacity: 0.4 }} />
                 <ProjectIcon type={p.icon} />
@@ -252,140 +246,113 @@ export function SceneProyectos() {
                   </p>
                   {/* Mini result */}
                   <div className="flex items-center gap-1 mt-1">
-                    <motion.span className="text-[10px] font-medium tabular-nums" style={{ color: "var(--active)" }}
-                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 + idx * 0.1 }}>
+                    <span className="text-[10px] font-medium tabular-nums a-fi" style={{ color: "var(--active)", animationDelay: `${0.15 + idx * 0.1}s` }}>
                       {p.resultHighlight}
-                    </motion.span>
+                    </span>
                     <span className="text-[9px]" style={{ color: "var(--measure-dim)" }}>· {p.results[1]}</span>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
 
           {/* Footer hint */}
-          <motion.p className="text-center text-[10px] mt-6 tracking-wider"
-            style={{ color: "var(--measure-dim)" }}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+          <p className="text-center text-[10px] mt-6 tracking-wider a-fi"
+            style={{ color: "var(--measure-dim)", animationDelay: "0.5s" }}>
             Toca cada proyecto para ver el detalle
-          </motion.p>
+          </p>
         </div>
       </div>
 
-      <AnimatePresence>
-        {expandedId && (() => {
-          const p = projects.find((x) => x.id === expandedId);
-          if (!p) return null;
+      {expandedId && (() => {
+        const p = projects.find((x) => x.id === expandedId);
+        if (!p) return null;
 
-          return (
-            <motion.div
-              key={p.id}
-              initial={isDesktop ? { opacity: 0, x: 40 } : {
-                opacity: 0,
-                scale: 0.92,
-                y: (origin?.top ?? 0) - 12,
-                height: origin?.height,
-                borderRadius: 8,
-              }}
-              animate={isDesktop ? { opacity: 1, x: 0 } : {
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                height: "auto",
-                borderRadius: 0,
-              }}
-              exit={isDesktop ? { opacity: 0, x: 40 } : {
-                opacity: 0,
-                scale: 0.92,
-                y: (origin?.top ?? 0) - 12,
-                height: origin?.height,
-                borderRadius: 8,
-                transition: { duration: 0.3 },
-              }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed right-0 bottom-0 top-0 overflow-y-auto"
-              data-scene-lock=""
-              style={{
-                background: "var(--substrate)",
-                width: isDesktop ? "65%" : "100%",
-                zIndex: isDesktop ? 1 : 50,
-                borderLeft: isDesktop ? "1px solid var(--boundary)" : "none",
-              }}>
-              <div className="min-h-dvh max-w-2xl mx-auto px-6 py-10">
-                <button
-                  onClick={closeCase}
-                  className="mb-6 text-[clamp(12px,1.6vw,14px)] select-none flex items-center gap-1"
-                  style={{ color: "var(--measure-dim)" }}>
-                  ← Volver
-                </button>
+        return (
+          <div
+            key={p.id}
+            className={"fixed right-0 bottom-0 top-0 overflow-y-auto " + (isClosing ? "a-panel-exit" : "a-panel-enter")}
+            data-scene-lock=""
+            style={{
+              background: "var(--substrate)",
+              width: isDesktop ? "65%" : "100%",
+              zIndex: isDesktop ? 1 : 50,
+              borderLeft: isDesktop ? "1px solid var(--boundary)" : "none",
+            }}>
+            <div className="min-h-dvh max-w-2xl mx-auto px-6 py-10">
+              <button
+                onClick={closeCase}
+                className="mb-6 text-[clamp(12px,1.6vw,14px)] select-none flex items-center gap-1"
+                style={{ color: "var(--measure-dim)" }}>
+                ← Volver
+              </button>
 
-                {/* Header with icon */}
-                <div className="flex items-start gap-3 mb-8">
-                  <ProjectIcon type={p.icon} />
-                  <div>
-                    <p className="text-[clamp(9px,1.3vw,11px)] tracking-[0.2em] mb-1"
-                      style={{ fontFamily: "ui-monospace,monospace", color: "var(--active)" }}>
-                      {p.category}
-                    </p>
-                    <h2 className="text-[clamp(28px,5vw,48px)] font-light tracking-tight"
-                      style={{ color: "var(--measure)" }}>
-                      {p.title}
-                    </h2>
-                  </div>
-                </div>
-
-                <Section label="PROBLEMA">
-                  {p.problem}
-                </Section>
-                <Section label="SOLUCIÓN">
-                  {p.solution}
-                </Section>
-
-                <HowItWorksSection steps={p.howItWorks} />
-
-                <div className="mb-6">
-                  <p className="text-[clamp(8px,1.1vw,10px)] tracking-widest mb-2"
-                    style={{ fontFamily: "ui-monospace,monospace", color: "var(--measure-dim)" }}>
-                    TECNOLOGÍAS
+              {/* Header with icon */}
+              <div className="flex items-start gap-3 mb-8">
+                <ProjectIcon type={p.icon} />
+                <div>
+                  <p className="text-[clamp(9px,1.3vw,11px)] tracking-[0.2em] mb-1"
+                    style={{ fontFamily: "ui-monospace,monospace", color: "var(--active)" }}>
+                    {p.category}
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {p.tech.map((t) => (
-                      <span key={t} className="text-[clamp(11px,1.6vw,13px)] px-2.5 py-1 rounded-[4px]"
-                        style={{ border: "1px solid var(--boundary)", color: "var(--measure-dim)" }}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                  <h2 className="text-[clamp(28px,5vw,48px)] font-light tracking-tight"
+                    style={{ color: "var(--measure)" }}>
+                    {p.title}
+                  </h2>
                 </div>
-
-                <div className="mb-8 p-4 rounded-[8px]"
-                  style={{ background: "var(--active-dim)", border: "1px solid var(--boundary)" }}>
-                  <p className="text-[clamp(8px,1.1vw,10px)] tracking-widest mb-3"
-                    style={{ fontFamily: "ui-monospace,monospace", color: "var(--measure-dim)" }}>
-                    RESULTADOS
-                  </p>
-                  <ul className="space-y-2">
-                    {p.results.map((r) => (
-                      <li key={r} className="text-[clamp(13px,2vw,15px)] flex items-start gap-2"
-                        style={{ color: "var(--measure)" }}>
-                        <span style={{ color: "var(--active)" }}>→</span> {r}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {p.url && (
-                  <a href={p.url} target="_blank" rel="noopener noreferrer"
-                    className="inline-block text-[clamp(11px,1.5vw,13px)] px-4 py-2 rounded-[6px] transition-all duration-200"
-                    style={{ border: "1px solid var(--active)", color: "var(--active)" }}>
-                    Ver proyecto live →
-                  </a>
-                )}
               </div>
-            </motion.div>
-          );
-        })()}
-      </AnimatePresence>
+
+              <Section label="PROBLEMA">
+                {p.problem}
+              </Section>
+              <Section label="SOLUCIÓN">
+                {p.solution}
+              </Section>
+
+              <HowItWorksSection steps={p.howItWorks} />
+
+              <div className="mb-6">
+                <p className="text-[clamp(8px,1.1vw,10px)] tracking-widest mb-2"
+                  style={{ fontFamily: "ui-monospace,monospace", color: "var(--measure-dim)" }}>
+                  TECNOLOGÍAS
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {p.tech.map((t) => (
+                    <span key={t} className="text-[clamp(11px,1.6vw,13px)] px-2.5 py-1 rounded-[4px]"
+                      style={{ border: "1px solid var(--boundary)", color: "var(--measure-dim)" }}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-8 p-4 rounded-[8px]"
+                style={{ background: "var(--active-dim)", border: "1px solid var(--boundary)" }}>
+                <p className="text-[clamp(8px,1.1vw,10px)] tracking-widest mb-3"
+                  style={{ fontFamily: "ui-monospace,monospace", color: "var(--measure-dim)" }}>
+                  RESULTADOS
+                </p>
+                <ul className="space-y-2">
+                  {p.results.map((r) => (
+                    <li key={r} className="text-[clamp(13px,2vw,15px)] flex items-start gap-2"
+                      style={{ color: "var(--measure)" }}>
+                      <span style={{ color: "var(--active)" }}>→</span> {r}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {p.url && (
+                <a href={p.url} target="_blank" rel="noopener noreferrer"
+                  className="inline-block text-[clamp(11px,1.5vw,13px)] px-4 py-2 rounded-[6px] transition-all duration-200"
+                  style={{ border: "1px solid var(--active)", color: "var(--active)" }}>
+                  Ver proyecto live →
+                </a>
+              )}
+            </div>
+          </div>
+        );
+      })()}
     </section>
   );
 }
